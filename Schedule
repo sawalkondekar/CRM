@@ -1,0 +1,45 @@
+Project name - CASF
+Module - Services Cases
+Use case - schedule for updating Elapsed days field based on created , closed , current date based on status
+Code:
+
+
+// if status is closed then update Elapsed Days using formuls as below:
+servicesCasesRecords = zoho.crm.getRecords("Service_Cases");
+for each  rec in servicesCasesRecords
+{
+	ID = rec.get("id");
+	status = rec.get("Status");
+	//info status;
+	//formula
+	closedDate = ifnull(rec.get("ClosedDate"),"");
+	// info closedDate;
+	createdDate = rec.get("Created_Time").toDate();
+	//info createdDate;
+	currentDate = zoho.currentdate;
+	
+		
+		//formula = first.remove("-") + "," + second.remove("-");
+		//info formula;
+		//updating Days 
+		if(status == "Closed" && closedDate != null)
+		{
+			first = closedDate.toDate().daysBetween(createdDate);
+		info first;
+		first1 = first.remove("-");
+		info first1;
+			mp = Map();
+			mp.put("Elapsed_Days",first1);
+			updateRecord = zoho.crm.updateRecord("Service_Cases",ID,mp);
+			info updateRecord;
+		}
+		else
+		{
+			second = currentDate.toDate().daysBetween(createdDate);
+			second1 = second.remove("-");
+			mp = Map();
+			mp.put("Elapsed_Days",second1);
+			updateRecord = zoho.crm.updateRecord("Service_Cases",ID,mp);
+			info updateRecord;
+		}
+}
