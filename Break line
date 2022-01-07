@@ -1,0 +1,9 @@
+a = "SBC" + "\n" + "BCD";
+
+info a;
+
+Output -
+
+SBC
+BCD
+
