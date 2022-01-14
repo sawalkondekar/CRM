@@ -1,0 +1,11 @@
+//use contains in if condition
+record = zoho.crm.getRecordById("Leads", ID); 
+ email = ifnull(record.get("Email"),"a");
+ if ( email.contains("gmail")) 
+ {
+	 info "Gmail" ;
+ }
+ else 
+ {
+	 info "Amazon" ;
+ }
