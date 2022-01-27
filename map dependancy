@@ -1,0 +1,5 @@
+using map dependancy :
+  we can add parent module and child module via picklist (not for lookup filed)
+   then using map dependency in the module select parent and child module and select the values in their respective fields
+   
+   same like based on District, it will shows cities in the city field .. it will work using map dependency.
