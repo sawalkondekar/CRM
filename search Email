@@ -1,0 +1,13 @@
+getContactDetails = zoho.crm.getRecordById("Contacts",ID);
+accountName = getContactDetails.get("Account_Name");
+email = getContactDetails.get("Email");
+info email;
+//search email in survey
+searchEmail = zoho.crm.searchRecords("Surveys","(Email:equals:" + email + ")");
+getid = searchEmail.getjson("id");
+info getid;
+//update contact in Survey using email 
+mp = Map();
+mp.put("Contact",ID);
+update = zoho.crm.updateRecord("Surveys",getid,mp);
+info update;
