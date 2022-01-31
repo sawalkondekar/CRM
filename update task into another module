@@ -1,0 +1,21 @@
+getDetails = zoho.crm.getRecordById("acuity_schedules",ID);
+//get details from acuity schedule module
+opp_ID = getDetails.get("Opportunities_Name").get("id");
+info opp_ID;
+Initial_Appointment_Doctor_Name = getDetails.get("Initial_Appointment_Doctor_Name").get("name");
+info "Initial_Appointment_Doctor_Name" + Initial_Appointment_Doctor_Name;
+Appointment_Start_Time_ate_Time_1 = getDetails.get("Appointment_Start_Time_ate_Time_1");
+info "Appointment_Start_Time_ate_Time_1" + Appointment_Start_Time_ate_Time_1;
+Appointment_End_Time = getDetails.get("Appointment_End_Time");
+info "Appointment_End_Time" + Appointment_End_Time;
+Wellman_Zoom_URL = getDetails.get("Wellman_Zoom_URL");
+info "Wellman_Zoom_URL" + Wellman_Zoom_URL;
+// //update task
+mp = Map();
+mp.put("Well_Man_Agent",Initial_Appointment_Doctor_Name);
+mp.put("Well_Man_Initial_Appointment",Appointment_Start_Time_ate_Time_1);
+mp.put("Well_Man_Initial_Appointment_End_Time",Appointment_End_Time);
+mp.put("Wellman_Zoom_URL",Wellman_Zoom_URL);
+//update 
+update = zoho.crm.updateRecord("Deals",opp_ID,mp);
+info update;
