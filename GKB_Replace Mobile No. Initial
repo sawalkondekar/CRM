@@ -1,0 +1,30 @@
+// info "hello";
+res_leads = zoho.crm.getRecordById("Leads",lead_id);
+phone = res_leads.get("Phone");
+mobile = res_leads.get("Mobile");
+//if the phone field is entered
+if(phone != null)
+{
+	if(phone.subString(0,1) == "0")
+	{
+		replaceStr = replaceFirst(phone,"0","+61");
+		mapStr = Map();
+		mapStr.put("Phone",replaceStr);
+		info replaceStr;
+		update_lead = zoho.crm.updateRecord("Leads",lead_id,mapStr);
+		info update_lead;
+	}
+}
+//if the mobile field is entered
+if(mobile != null)
+{
+	if(mobile.subString(0,1) == "0")
+	{
+		replaceStr = replaceFirst(mobile,"0","+61");
+		mapStr = Map();
+		mapStr.put("Mobile",replaceStr);
+		info replaceStr;
+		update_lead = zoho.crm.updateRecord("Leads",lead_id,mapStr);
+		info update_lead;
+	}
+}
