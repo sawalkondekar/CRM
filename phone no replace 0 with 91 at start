@@ -1,0 +1,19 @@
+leads = zoho.crm.getRecordById("Leads",ID);
+//phone is not equls to empty
+phone = leads.get("Phone");
+info phone;
+startsWith = phone.startsWith("0");
+info "startsWith" + startsWith;
+result1 = phone.removeFirstOccurence("0");
+info result1;
+if(startsWith == true)
+{
+	info "Hi";
+	//remove  zero 
+	update = "91" + result1;
+	info update;
+	mp = Map();
+	mp.put("Phone",update);
+	update1 = zoho.crm.updateRecord("Leads",ID,mp);
+	info update1;
+}
