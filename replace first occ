@@ -1,0 +1,2 @@
+aa="012300123 ";
+info aa.replaceFirstIgnoreCase("0", "91");
