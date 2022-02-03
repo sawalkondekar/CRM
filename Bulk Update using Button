@@ -1,0 +1,19 @@
+GKB_Update_telephone_Number_leading_61(String SchID)
+//Bulk update phone number in a custom module named acuity_schedules.. replace leading 0 with +1 (mhc au)
+//return SchID;
+sch_id_list = SchID.toList("|||");
+for each  sch_id in sch_id_list
+{
+	//info sch_id.toLong();
+	acuity_record = zoho.crm.getRecordById("acuity_schedules",sch_id.toLong());
+	//info acuity_record;
+	telNo = acuity_record.get("Phone");
+	//info telNo;
+	//replace the first 0 with a +61
+	newTel = replaceFirst(telNo,"0","+61");
+	info newTel;
+	update_map = {"Phone":newTel};
+	update_resp = zoho.crm.updateRecord("acuity_schedules",sch_id.toLong(),update_map);
+	info update_resp;
+}
+return "Update complete!";
