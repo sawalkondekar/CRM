@@ -1,0 +1,2 @@
+leads = zoho.crm.getRecordById("Leads",ID);
+created = leads.get("Created_Time").toDate(); info created;
