@@ -1,0 +1,17 @@
+//CASF
+sch_id_list = SchID.toList("|||");
+for each  sch_id in sch_id_list
+{
+	opportunity = zoho.crm.getRecordById("Potentials",sch_id.toLong());
+	Total_Price = ifnull(opportunity.get("Grand_Total"),"0");
+	info Total_Price;
+	Retail_Total = ifnull(opportunity.get("Retail_Total"),"0");
+	info Retail_Total;
+	total = Total_Price + Retail_Total;
+	info total;
+	prodmp = Map();
+	prodmp.put("Amount",total);
+	response = zoho.crm.updateRecord("Potentials",sch_id.toLong(),prodmp);
+	info response;
+}
+return "Update complete!";
