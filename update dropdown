@@ -1,0 +1,28 @@
+contactRecord = zoho.crm.getRecordById("Contacts",contactID);
+account_name = contactRecord.get("Account_Name");
+account_ID = account_name.get("id");
+//getting account details
+AccountsRecord = zoho.crm.getRecordById("Accounts",account_ID);
+//info AccountsRecord;
+type_of_business = AccountsRecord.get("Type_of_Business");
+info type_of_business;
+segment = AccountsRecord.get("Segment");
+// info segment;
+industry_serviced = AccountsRecord.get("Industry_Serviced");
+//info industry_serviced;
+rating = AccountsRecord.get("Rating");
+Shipping_State = AccountsRecord.get("Shipping_State");
+Shipping_Code = AccountsRecord.get("Shipping_Code");
+// info rating;
+//mapping
+mp = Map();
+mp.put("Type_of_Business_Marketing_Only",type_of_business.toString());
+mp.put("Segment_Marketing_Only",segment.toString());
+mp.put("Industry_Serviced_Marketing_Only",industry_serviced.toString());
+mp.put("Rating_Marketing_Only",rating.toString());
+mp.put("Shipping_State",Shipping_State);
+mp.put("Shipping_Code",Shipping_Code);
+info mp;
+//updating
+updateRecord = zoho.crm.updateRecord("Contacts",contactID,mp);
+info updateRecord;
