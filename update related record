@@ -1,0 +1,26 @@
+soid = oid.toLong();
+sodata = zoho.crm.getRecordById("Sales_Orders",soid);
+ordercompanyname = sodata.get("Order_Company_Name");
+orderemail = sodata.get("Email");
+info orderemail;
+accountId = null;
+//lookup the account using the company name field
+accountRecord = zoho.crm.searchRecords("Accounts","(Account_Name:equals:" + ordercompanyname + ")");
+info ordercompanyname;
+//1. Check if email is a contact.. if it is, update the Contact field
+contactrecord = zoho.crm.searchRecords("Contacts","(Email:equals:" + orderemail + ")");
+info contactrecord;
+if(contactrecord.size() > 0)
+{
+	contactId = contactrecord.get(0).get("id");
+	updateContactLookup = zoho.crm.updateRecord("Sales_Orders",soid,{"Contact":contactId.toLong(),"Status":"Pending Lead"});
+	info "Updated";
+}
+//update the accountname with order company name if exact match
+if(accountRecord.size() > 0)
+{
+	//Found!
+	accountId = accountRecord.get(0).get("id");
+	//MNS Updating the account field
+	updatesalesorder = zoho.crm.updateRecord("Sales_Orders",soid,{"Account_Name":accountId.toLong()});
+}
