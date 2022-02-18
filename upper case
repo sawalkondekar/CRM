@@ -1,0 +1,8 @@
+acc = zoho.crm.getRecordById("Leads",lead_id);
+State = acc.get("State");
+upper = upper(State);
+// info State;
+mp = Map();
+mp.put("State",upper);
+upddate1 = zoho.crm.updateRecord("Leads",lead_id,mp);
+info upddate1;
