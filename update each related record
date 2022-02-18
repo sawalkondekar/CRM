@@ -1,0 +1,23 @@
+accountsRecords = zoho.crm.getRecordById("Accounts",accountID);
+// info accountsRecords; 
+rating = accountsRecords.get("Rating");
+// info rating; 
+if(rating == "Closed/Out of Business")
+{
+	//	info "Hi";
+	getrelatedcontacts = zoho.crm.getRelatedRecords("Contacts","Accounts",accountID);
+	//info getrelatedcontacts;
+	//
+	for each  contact in getrelatedcontacts
+	{
+		contactID = contact.get("id");
+		//info contactID;
+		contactsRecord = zoho.crm.getRecordById("Contacts",contactID);
+		mp = Map();
+		mp.put("Job_Role","No Longer an employee");
+		mp.put("Email_Opt_Out",true);
+		info mp;
+		updatecontact = zoho.crm.updateRecord("Contacts",contactID,mp);
+		info updatecontact;
+	}
+}
