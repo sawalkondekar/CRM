@@ -1,0 +1,17 @@
+opp = zoho.crm.getRecordById("Deals",opp_id);
+Linked_to_Person_Account_Name = ifnull(opp.get("Linked_to_Person_Account_Name"),"");
+//info Linked_to_Person_Account_Name;
+if(Linked_to_Person_Account_Name != "")
+{
+	upper = upper(Linked_to_Person_Account_Name);
+	// info upper;
+	first = upper.getPrefix(" ");
+	last = upper.getSuffix(" ");
+	test = last + ", " + first;
+	Remake = ifnull(opp.get("Remake"),"");
+	// info Remake;
+	//info "yes" ;
+	mp = Map();
+	mp.put("Deal_Name",test);
+	update = zoho.crm.updateRecord("Deals",opp_id,mp);
+}
