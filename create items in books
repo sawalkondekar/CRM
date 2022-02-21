@@ -1,0 +1,21 @@
+// first make a OAuth Connection
+
+Get_ProductDetails = zoho.crm.getRecordById("NZ_Products",ProductId);
+Get_ProductName = ifnull(Get_ProductDetails.get("Name"),"");
+Get_ProductPrice = ifnull(Get_ProductDetails.get("Unit_Price"),"");
+Get_Productcode = ifnull(Get_ProductDetails.get("Product_Code"),"");
+Books_Item = Map();
+Custom_Data = {{"index":1,"value":ProductId}};
+Books_Item.put("name",Get_ProductName);
+Books_Item.put("sku",Get_Productcode);
+//Books_Item.put("item_type","Sales Items");
+//Books_Item.put("account_id","2201855000000000388");
+Books_Item.put("rate",Get_ProductPrice);
+Books_Item.put("custom_fields",Custom_Data);
+CreateItem_InBooks = zoho.books.createRecord("items","738675903",Books_Item);
+info CreateItem_InBooks;
+Books_ItemData = ifnull(CreateItem_InBooks.get("item"),"");
+GetitemItId = ifnull(Books_ItemData.get("item_id"),"");
+UpdateMap = Map();
+UpdateMap.put("Books_Item_Id",GetitemItId);
+Update = zoho.crm.updateRecord("NZ_Products",ProductId,UpdateMap);
