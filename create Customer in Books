@@ -1,0 +1,29 @@
+Get_contact_details = zoho.crm.getRecordById("Contacts",ContcatId);
+Get_FirstName = ifnull(Get_contact_details.get("First_Name"),"");
+Get_LastName = ifnull(Get_contact_details.get("Last_Name"),"");
+Get_Email = ifnull(Get_contact_details.get("Email"),"");
+Get_Phone = ifnull(Get_contact_details.get("Phone"),"");
+Get_Mobile = ifnull(Get_contact_details.get("Mobile"),"");
+Get_Street = ifnull(Get_contact_details.get("Mailing_Street"),"");
+Get_State = ifnull(Get_contact_details.get("Mailing_State"),"");
+Get_City = ifnull(Get_contact_details.get("Mailing_City"),"");
+Get_Code = ifnull(Get_contact_details.get("PE_Dose"),"");
+Get_Country = ifnull(Get_contact_details.get("Mailing_Country"),"");
+Customer_Name = Get_FirstName + Get_LastName;
+info Customer_Name;
+Bulling_Address = {"address":Get_Street,"city":Get_City,"state":Get_State,"zip":Get_Code,"country":Get_Country};
+Contact_Person = {{"first_name":Get_FirstName,"last_name":Get_LastName,"email":Get_Email,"phone":Get_Phone,"mobile":Get_Mobile,"enable_portal":true}};
+info Contact_Person;
+MapData = Map();
+MapData.put("contact_name",Customer_Name);
+MapData.put("contact_type","customer");
+MapData.put("customer_sub_type","business");
+MapData.put("contact_persons",Contact_Person);
+MapData.put("billing_address",Bulling_Address);
+info MapData;
+//Au Org
+Create_Customer_InAUBooks = zoho.books.createRecord("Contacts","709976379",MapData);
+info Create_Customer_InAUBooks;
+//PCA (AUST) PTY LTD Org
+Create_Customer_InPCABooks = zoho.books.createRecord("Contacts","755583790",MapData);
+info Create_Customer_InPCABooks;
