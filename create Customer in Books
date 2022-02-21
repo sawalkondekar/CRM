@@ -1,3 +1,5 @@
+// first make OAth connection in CRM for this 
+
 Get_contact_details = zoho.crm.getRecordById("Contacts",ContcatId);
 Get_FirstName = ifnull(Get_contact_details.get("First_Name"),"");
 Get_LastName = ifnull(Get_contact_details.get("Last_Name"),"");
