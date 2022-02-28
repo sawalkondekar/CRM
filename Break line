@@ -1,5 +1,8 @@
+// it will show in output not in crm info thing.. but will show in field the output
 a = "SBC" + "\n" + "BCD";
-
+or b = "ABC";
+c = "DEF"'
+e = b + "\n" + c;  info c;
 info a;
 
 Output -
