@@ -1,0 +1,25 @@
+// get subject and update inot Lead source fields of Contact lookup
+webformRecord = zoho.crm.getRecordById("Webforms",ID);
+webform_name = webformRecord.get("Name");
+//getting contact id from lookup contact field
+emailrec = webformRecord.get("Email");
+info emailrec;
+//1. Check if email is a contact.. 
+contactrecord = zoho.crm.searchRecords("Contacts","(Email:equals:" + emailrec + ")");
+if(contactrecord.size() > 0)
+{
+	isContact = true;
+	contactId = contactrecord.get(0).get("id");
+	info contactId;
+	if(contactId != null)
+	{
+		contactDetails = zoho.crm.getRecordById("Contacts",contactId);
+		info contactDetails;
+		//mapping
+		mp = Map();
+		mp.put("Lead_Source",webform_name);
+		update = zoho.crm.updateRecord("Contacts",contactId,mp);
+		info "done" + update;
+		info mp;
+	}
+}
