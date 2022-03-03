@@ -1,0 +1,11 @@
+sch_id_list = ID.toList("|||");
+for each  sch_id in sch_id_list
+{
+	invoice_record = zoho.crm.getRecordById("Invoices",sch_id.toLong());
+	invoice_no = invoice_record.get("Reference");
+	info invoice_no;
+	mp = Map();
+	mp.put("Subject",invoice_no);
+	update = zoho.crm.updateRecord("Invoices",sch_id.toLong(),mp);
+}
+return "Subject updated successfully";
