@@ -1,0 +1,6 @@
+quest_order_record = zoho.crm.getRecordById("Quest_Orders", ID, "mycustom"); info rec;
+doctor_name = quest_order_record.get("Doctor_Name1"); info doctor_name;
+
+//mycustom is the connection name
+//so it wil gives no permission error
+//then create connection and use that in the task like in line no. 1
