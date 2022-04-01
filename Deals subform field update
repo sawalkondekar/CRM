@@ -1,0 +1,41 @@
+opportunityData = zoho.crm.getRecordById("Deals",oppId);
+// info opportunityData;
+productListing = opportunityData.get("Products_Listing");
+// info productListing;
+pdlist = List();
+if(productListing)
+{
+	for each  listing in productListing
+	{
+		mp = Map();
+		mp.put("Project_Price",listing.get("Unit_Price"));
+		mp.put("Unit_Price",listing.get("Unit_Price"));
+		mp.put("Alternate_Stock_Code",listing.get("Alternate_Stock_Code"));
+		mp.put("$field_states",listing.get("$field_states"));
+		mp.put("Created_Time",listing.get("Created_Time"));
+		mp.put("Line_Description",listing.get("Line_Description"));
+		mp.put("Parent_Id",{"name":listing.get("Parent_Id").get("name"),"id":listing.get("Parent_Id").get("id")});
+		mp.put("Select_Product",{"name":listing.get("Select_Product").get("name"),"id":listing.get("Select_Product").get("id")});
+		mp.put("Wholesale_Total",listing.get("Wholesale_Total"));
+		mp.put("Qty_Remaining",listing.get("Qty_Remaining"));
+		mp.put("Next_Order_Qty",listing.get("Next_Order_Qty"));
+		mp.put("Web_Price_1",listing.get("Web_Price_1"));
+		mp.put("$in_merge",listing.get("$in_merge"));
+		mp.put("Qty",listing.get("Qty"));
+		mp.put("Total",listing.get("Total"));
+		mp.put("id",listing.get("id"));
+		mp.put("Next_Order_Date",listing.get("Next_Order_Date"));
+		pdlist.add(mp);
+	}
+	//end for
+}
+//end if
+// 		info pdlist;
+if(pdlist.size() > 0)
+{
+	myMapOpportunity = Map();
+	myMapOpportunity.put("Products_Listing",pdlist);
+	update_opportunity = zoho.crm.updateRecord("Deals",oppId,myMapOpportunity);
+	info myMapOpportunity;
+	info update_opportunity;
+}
