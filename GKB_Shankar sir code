@@ -1,0 +1,1300 @@
+GKB_Update_telephone_Number_leading_61(String SchID)
+//Bulk update phone number in a custom module named acuity_schedules.. replace leading 0 with +1 (mhc au)
+//return SchID;
+sch_id_list = SchID.toList("|||");
+for each  sch_id in sch_id_list
+{
+	//info sch_id.toLong();
+	acuity_record = zoho.crm.getRecordById("acuity_schedules",sch_id.toLong());
+	//info acuity_record;
+	telNo = acuity_record.get("Phone");
+	//info telNo;
+	//replace the first 0 with a +61
+	newTel = replaceFirst(telNo,"0","+61");
+	info newTel;
+	update_map = {"Phone":newTel};
+	update_resp = zoho.crm.updateRecord("acuity_schedules",sch_id.toLong(),update_map);
+	info update_resp;
+}
+return "Update complete!";
+
+
+GKB_Update_State_Based_On_Doc_Clinic.deluge (lgp - holly)
+
+rec = zoho.crm.getRecordById("Patients_Others",ptId);
+info rec;
+doctorRef = rec.get("Doctor_Referral_Recommendation");
+if(!isNull(doctorRef))
+{
+	contactID = doctorRef.get("id");
+	contactRec = zoho.crm.getRecordById("Contacts",contactID);
+	contactPrimaryState = contactRec.get("Primary_State");
+	zoho.crm.updateRecord("Patients_Others",ptId,{"Doctors_State":contactPrimaryState});
+}
+clinicRef = rec.get("Clinic_Referral_Recommendation");
+if(!isNull(clinicRef))
+{
+	accountID = clinicRef.get("id");
+	accountsRec = zoho.crm.getRecordById("Accounts",accountID);
+	accountPrimaryState = accountsRec.get("Clinic_State");
+	info accountPrimaryState;
+	zoho.crm.updateRecord("Patients_Others",ptId,{"Doctors_State":accountPrimaryState});
+}
+
+
+SEND SMS uisng TWILIO with Deluge
+m = Map();
+m.put("type","CurrentUser");
+resp = zoho.crm.invokeConnector("crm.getusers",m);
+response = resp.get("response");
+indMobile = response.executeXPath("/root/users/mobile/text()");
+datamap = Map();
+datamap.put("module","Leads");
+datamap.put("id",lead);
+resp = zoho.crm.invokeConnector("crm.get",datamap);
+resp1 = resp.get("response").toMap();
+res = resp1.get("data");
+fName = res.getJSON("First_Name");
+fName = fName.proper();
+mobile = res.getJSON("Phone");
+lStatus = res.getJSON('Lead_Source');
+if(lStatus == "Webform - Make an Appointment")
+{
+	msg = "Hello " + fName + ", we have received your appointment request. We will contact you shortly to discuss your issues. Meanwhile please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n If you would like advice about your sexual health concerns please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Facebook - QUIZ" || lStatus == "Google AdWords")
+{
+	msg = "Hello " + fName + ", we have received your quiz responses and are preparing an assessment for you. Please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4  \n TD: http://mhc.2.vu/2 \n We will be calling you to discuss your condition and treatment options. If you would like advice about your sexual health concerns URGENTLY please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Facebook/Google")
+{
+	msg = "Hello " + fName + ", please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3  \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n If you would like advice about your sexual health concerns URGENTLY please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Mass email campaign - Webform/Webquiz")
+{
+	msg = "Hello " + fName + ", we have received your quiz responses and are preparing an assessment for you. Please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We will be calling you to discuss your condition and treatment options. If you would like advice about your sexual health concerns URGENTLY please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Inbound Call")
+{
+	msg = "Hello (first name), thank you for your call today. Please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We are here to help you overcome your challenges and restore your sexual performance. If you would like advice about your sexual health concerns please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "SMS inbound")
+{
+	msg = "Hello " + fName + ", please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We are here to help you overcome your challenges and restore your sexual performance. If you would like advice about your sexual health concerns urgently please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "WhatsApp")
+{
+	msg = "Hello " + fName + ", please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We are here to help you overcome your challenges and restore your sexual performance. If you would like advice about your sexual health concerns urgently please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Web Payment Form")
+{
+	msg = "Hello " + fName + ", please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We are here to help you overcome your challenges and restore your sexual performance. If you would like advice about your sexual health concerns urgently please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au ";
+}
+if(lStatus == "Facebook - Chat Now CONFIRMED")
+{
+	msg = "Hello " + fName + ", it was nice chatting with you over facebook. Please watch this video from the Men’s Health Clinic that explains our services and treatment options. http://mhc.2.vu/video \n FREE DOWNLOADS \n ED: http://mhc.2.vu/3 \n PE: http://mhc.2.vu/4 \n TD: http://mhc.2.vu/2 \n We will be calling you to discuss your condition and treatment options. If you would like advice about your sexual health concerns URGENTLY please reply to this message or call 1300 878 117. Enjoy the sexual confidence you deserve. \n www.mhc.com.au";
+}
+twilioAccSId = zoho.crm.getOrgVariable("twilio__Account_SID");
+authtokenTwilio = zoho.crm.getOrgVariable("twilio__AuthToken");
+baseEncoded = zoho.encryption.base64Encode(twilioAccSId + ":" + authtokenTwilio);
+encode = baseEncoded.removeFirstOccurence("\n");
+tmobiletemp = zoho.crm.getOrgVariable("twilio__Twilio_Mobile_Number");
+if(tmobiletemp.contains(" "))
+{
+	twiliomobile = tmobiletemp.replaceAll(" ","",false);
+}
+else
+{
+	twiliomobile = tmobiletemp;
+}
+if(twiliomobile.contains("-"))
+{
+	twiliomobilenew = twiliomobile.replaceAll("-","",false);
+}
+else
+{
+	twiliomobilenew = tmobiletemp;
+}
+if(mobile != null || mobile != "null" || mobile != "")
+{
+	if(mobile.startsWith("0"))
+	{
+		mobile = mobile.subString(1,mobile.length());
+	}
+	if(mobile.contains(" "))
+	{
+		mobile = mobile.replaceAll(" ","",false);
+	}
+	if(mobile.contains("-"))
+	{
+		mobile = mobile.replaceAll("-","",false);
+	}
+	if(mobile.length() = 13 && mobile.startsWith("+"))
+	{
+		mobile = mobile.subString(4,mobile.length());
+	}
+	if(mobile.length() = 12 && mobile.startsWith("+"))
+	{
+		mobile = mobile;
+	}
+	else
+	{
+		mobile = "+61" + mobile;
+	}
+}
+if(mobile != "" || mobile != null || mobile != "null" || msg != null || msg != "null")
+{
+	headermap = Map:String();
+	headermap.put("Authorization","Basic " + encode);
+	mappp = Map:String();
+	mappp.put("To",mobile);
+	mappp.put("From",twiliomobilenew);
+	mappp.put("Body",msg);
+	locale = zoho.crm.getOrgVariable("twilio__Language");
+	respp = postUrl("https://api.twilio.com/2010-04-01/Accounts/" + twilioAccSId + "/Messages.json",mappp,headermap);
+}
+info respp;
+
+Update quests doctors state field based on either clinic or doc
+//The current record id
+questRecordID = questID.toLong();
+questData = zoho.crm.getRecordById("Quests",questRecordID);
+info questData;
+
+//if doctor referral recommendation is not null, get the state id based on that
+if (questData.get("Doctor_referral_recommendation")!=null){
+	//locate this in contacts
+	contactId = questData.get('Doctor_referral_recommendation').get('id');
+	info contactId;
+	//locate this in contacts.. get the primary state field	
+	contactData = zoho.crm.getRecordById("Contacts",contactId.toLong());
+	primaryState =  contactData.get('Primary_State');
+	updateRecord = zoho.crm.updateRecord("Quests",questRecordID,{"Doctors_State":primaryState});
+}
+//only one of these should typically happen
+else if (questData.get("Clinic_referral_recommendation")!=null){
+	clinicId = questData.get('Clinic_referral_recommendation').get('id');
+	info clinicId;
+	//locate this in clinics.. get the clinic state field	
+	clinicData = zoho.crm.getRecordById("Accounts",clinicId.toLong());
+	clinicState =  clinicData.get('Clinic_State');
+	updateRecord = zoho.crm.updateRecord("Quests",questRecordID,{"Doctors_State":clinicState});
+}
+
+
+Concatenate medical info field from Doctor consult module and save it in a field in the opportunities record (MHC) - This is required so that mail merge can be performed
+
+recDetails = zoho.crm.getRecordById("Doctor_Initial_Consult",docconsultid.toLong());
+info recDetails;
+opid = recDetails.get("Opportunity").get("id");
+info opid;
+if(opid != null)
+{
+	opdetails = zoho.crm.getRecordById("Deals",opid.toLong());
+	info opdetails;
+	//only if the initial consultation medical info field is empty, concat and insert the following
+	if (opdetails.get("Initial_Consultation_Medical_Info")==null){
+		info "field is null..updating field";
+		Do_you_have_Diabetes = "Do_you_have_Diabetes: " + ifnull(recDetails.get("Do_you_have_Diabetes"),"");
+		Type_of_Diabetes = "Type_of_Diabetes: " + ifnull(recDetails.get("Type_of_Diabetes"),"");
+		Blood_Sugar = "Blood_Sugar: " + ifnull(recDetails.get("Blood_Sugar"),"");
+		Blood_Pressure = "Blood_Pressure: " + ifnull(recDetails.get("Blood_Pressure"),"");
+		Do_you_have_any_Heart_Conditions = "Do_you_have_any_Heart_Conditions: " + ifnull(recDetails.get("Do_you_have_any_Heart_Conditions"),"");
+		Heart_Condition_notes = "Heart_Condition_notes: " + ifnull(recDetails.get("Heart_Condition_notes"),"NA");
+		Do_you_experience_any_chest_pains = "Do_you_experience_any_chest_pains: " + ifnull(recDetails.get("Do_you_experience_any_chest_pains"),"");
+		Chest_Pain_notes = "Chest_Pain_notes: " + ifnull(recDetails.get("Chest_Pain_notes"),"NA");
+		Are_you_taking_Nitrate_medication = "Are_you_taking_Nitrate_medication: " + ifnull(recDetails.get("Are_you_taking_Nitrate_medication"),"");
+		Nitrate_Medication_Notes = "Nitrate_Medication_Notes: " + ifnull(recDetails.get("Nitrate_Medication_Notes"),"");
+		CVS = "CVS: " + ifnull(recDetails.get("CVS"),"");
+		CVS_notes = "CVS_notes: " + ifnull(recDetails.get("CVS_notes"),"");
+		Liver = "Liver: " + ifnull(recDetails.get("Liver"),"");
+		Liver_notes = "Liver_notes: " + ifnull(recDetails.get("Liver_notes"),"");
+		Renal = "Renal: " + ifnull(recDetails.get("Renal"),"");
+		Renal_notes = "Renal_notes: " + ifnull(recDetails.get("Renal_notes"),"");
+		Loss_of_vision = "Loss_of_vision: " + ifnull(recDetails.get("Loss_of_vision"),"");
+		Loss_of_vision_notes = "Loss_of_vision_notes: " + ifnull(recDetails.get("Loss_of_vision_notes"),"");
+		Loss_of_hearing = "Loss_of_hearing: " + ifnull(recDetails.get("Loss_of_hearing"),"");
+		Loss_of_hearing_notes = "Loss_of_hearing_notes: " + ifnull(recDetails.get("Loss_of_hearing_notes"),"");
+		Mental_Health = "Mental_Health: " + ifnull(recDetails.get("Mental_Health"),"");
+		Mental_Health_notes = "Mental_Health_notes: " + ifnull(recDetails.get("Mental_Health_notes"),"");
+		CNS = "CNS: " + ifnull(recDetails.get("CNS"),"");
+		CNS_notes = "CNS_notes: " + ifnull(recDetails.get("CNS_notes"),"");
+		GIT = "GIT: " + ifnull(recDetails.get("GIT"),"");
+		GIT_notes = "GIT_notes: " + ifnull(recDetails.get("GIT_notes"),"");
+		Resp = "Resp: " + ifnull(recDetails.get("Resp"),"");
+		Resp_notes = "Resp_notes: " + ifnull(recDetails.get("Resp_notes"),"");
+		Cholesterol = "Cholesterol: " + ifnull(recDetails.get("Cholesterol"),"");
+		Genitalia = "Genitalia: " + ifnull(recDetails.get("Genitalia"),"");
+		Allergies = "Allergies: " + ifnull(recDetails.get("Allergies"),"");
+		Current_medications_used_by_patient = "Current_medications_used_by_patient: " + ifnull(recDetails.get("Current_medications_used_by_patient"),"");
+		Surgical_History = "Surgical_History: " + ifnull(recDetails.get("Surgical_History"),"");
+		delimiter = ";";
+		concat_field = Do_you_have_Diabetes + delimiter;
+		concat_field = concat_field + Type_of_Diabetes + delimiter;
+		concat_field = concat_field + Blood_Sugar + delimiter;
+		concat_field = concat_field + Blood_Pressure + delimiter;
+		concat_field = concat_field + Do_you_have_any_Heart_Conditions + delimiter;
+		concat_field = concat_field + Heart_Condition_notes + delimiter;
+		concat_field = concat_field + Do_you_experience_any_chest_pains + delimiter;
+		concat_field = concat_field + Chest_Pain_notes + delimiter;
+		concat_field = concat_field + Are_you_taking_Nitrate_medication + delimiter;
+		concat_field = concat_field + Nitrate_Medication_Notes + delimiter;
+		concat_field = concat_field + CVS + delimiter;
+		concat_field = concat_field + CVS_notes + delimiter;
+		concat_field = concat_field + Liver + delimiter;
+		concat_field = concat_field + Liver_notes + delimiter;
+		concat_field = concat_field + Renal + delimiter;
+		concat_field = concat_field + Renal_notes + delimiter;
+		concat_field = concat_field + Loss_of_vision + delimiter;
+		concat_field = concat_field + Loss_of_vision_notes + delimiter;
+		concat_field = concat_field + Loss_of_hearing + delimiter;
+		concat_field = concat_field + Loss_of_hearing_notes + delimiter;
+		concat_field = concat_field + Mental_Health + delimiter;
+		concat_field = concat_field + Mental_Health_notes + delimiter;
+		concat_field = concat_field + CNS + delimiter;
+		concat_field = concat_field + CNS_notes + delimiter;
+		concat_field = concat_field + GIT + delimiter;
+		concat_field = concat_field + GIT_notes + delimiter;
+		concat_field = concat_field + Resp + delimiter;
+		concat_field = concat_field + Resp_notes + delimiter;
+		concat_field = concat_field + Cholesterol + delimiter;
+		concat_field = concat_field + Genitalia + delimiter;
+		concat_field = concat_field + Allergies + delimiter;
+		concat_field = concat_field + Current_medications_used_by_patient + delimiter;
+		concat_field = concat_field + Surgical_History + delimiter;
+		mp = Map();
+		mp.put("Initial_Consultation_Medical_Info",concat_field);
+		update = zoho.crm.updateRecord("Deals",opid.toLong(),mp);
+	}
+	else 
+    {
+		info "nothing to update!";
+    }
+}
+
+
+Associate Webforms on convert of lead to Contact (CASF)
+
+//The current contact id
+cid = contactid.toLong();
+//the webform record if matching email is found in the webforms module.
+wfrecord = zoho.crm.searchRecords("Webforms","(Email:equals:" + contactemail + ")");
+info wfrecord;
+if(wfrecord.size() > 0 && wfrecord != null)
+{
+	//there could be multiple webforms with said email id.. update all
+	for each  rec in wfrecord
+	{
+		webformid = rec.get("id");
+		//MNS Update the contact lookup field.
+		updateContactLookup = zoho.crm.updateRecord("Webforms",webformid,{"Contact":cid});
+	}
+}
+
+
+Update the "Lead" lookup field if the email is found in Leads module. If not found, create a new lead!
+//The current webform record id
+webformid = wfid.toLong();
+webformdata = zoho.crm.getRecordById("Webforms",webformid);
+emailrec = webformdata.get("Email");
+fn = webformdata.get("First_Name");
+ln = webformdata.get("Last_Name");
+state = webformdata.get("State");
+phone = webformdata.get("Phone_Number");
+project = webformdata.get("Project_Name");
+//the lead record if email is found in the leads module.
+leadrecord = zoho.crm.searchRecords("Leads","(Email:equals:" + emailrec + ")");
+if(leadrecord.size() > 0)
+{
+	//Found!
+	leadid = leadrecord.get(0).get("id");
+}
+if(leadrecord.size() == 0)
+{
+	//lead does not exist.. create it in leads!
+	leadinfo = {"Last_Name":ln,"First_Name":fn,"Phone":phone,"Email":emailrec,"Country":"AU"};
+	leadrecord = zoho.crm.createRecord("Leads",leadinfo);
+	leadid = leadrecord.get("id");
+}
+//info leadrecord;
+//MNS Updating the lead lookupfield with the retrieved record from leads module
+updateLeadLookup = zoho.crm.updateRecord("Webforms",webformid,{"Lead":leadid.toLong()});
+//done
+
+
+Move Invoice in CRM to Invoice in Books
+
+soID = soID.toLong();
+soData = zoho.crm.getRecordById("Invoices",soID);
+createddateList = soData.get("Created_Time").toList("T");
+createDate = createddateList.get(0);
+Billing_Street = ifnull(soData.getJSON("Billing_Street"),"");
+Billing_City = ifnull(soData.getJSON("Billing_City"),"");
+Billing_State = ifnull(soData.getJSON("Billing_State"),"");
+Billing_Code = ifnull(soData.getJSON("Billing_Code"),"");
+Billing_Country = ifnull(soData.getJSON("Billing_Country"),"");
+Shipping_Street = ifnull(soData.getJSON("Shipping_Street"),"");
+Shipping_City = ifnull(soData.getJSON("Shipping_City"),"");
+Shipping_State = ifnull(soData.getJSON("Shipping_State"),"");
+Shipping_Code = ifnull(soData.getJSON("Shipping_Code"),"");
+Shipping_Country = ifnull(soData.getJSON("Shipping_Country"),"");
+pdlist = list();
+contactData = soData.get('Contact_Name');
+if(contactData != null)
+{
+	contactID = contactData.get('id');
+	contactname = contactData.getJSON("name");
+	Email = contactData.get("Email");
+	contactdetails = zoho.crm.getRecordById("Contacts",contactID);
+	Email = contactdetails.get("Email");
+	accountData = contactdetails.get('Account_Name');
+	if(accountData != null)
+	{
+		accountData = accountData.get("name");
+		cname = encodeURL(accountData);
+	}
+	else
+	{
+		cname = encodeURL(contactname);
+	}
+}
+contactsearch = zoho.books.getRecords("Contacts","690963922","contact_name=" + cname + "&contact_type=customer");
+customer = contactsearch.getJSON("contacts");
+// for each  ele in customer
+// {
+// 	booksemail = ele.get("email");
+// 	if(booksemail == Email)
+// 	{
+// 		customerid = ele.toMap().get("contact_id");
+// 		customername = ele.toMap().get("contact_name");
+// 	}
+// }
+if(customer.size() = 0)
+{
+	MailingStreet = contactdetails.getJSON("Mailing_Street");
+	MailingCity = contactdetails.getJSON("Mailing_City");
+	MailingState = contactdetails.getJSON("Mailing_State");
+	MailingZip = contactdetails.getJSON("Mailing_Zip");
+	MailingCountry = contactdetails.getJSON("Mailing_Country");
+	OtherStreet = contactdetails.getJSON("Other_Street");
+	OtherCity = contactdetails.getJSON("Other_City");
+	OtherState = contactdetails.getJSON("Other_State");
+	OtherCountry = contactdetails.getJSON("Other_Country");
+	OtherZip = contactdetails.getJSON("Other_Zip");
+	FirstName = contactdetails.getJSON("First_Name");
+	LastName = contactdetails.getJSON("Last_Name");
+	Position = contactdetails.getJSON("Position");
+	Department = contactdetails.getJSON("Department");
+	Email = contactdetails.getJSON("Email");
+	Phone = contactdetails.getJSON("Phone");
+	Mobile = contactdetails.getJSON("Mobile");
+	Fax = contactdetails.getJSON("Fax");
+	SkypeID = contactdetails.getJSON("Skype_ID");
+	conmp = Map();
+	if(accountData != null)
+	{
+		conmp.put("contact_name",accountData);
+	}
+	else
+	{
+		conmp.put("contact_name",contactname);
+	}
+	conmp.put("company_name",accountData);
+	conmp.put("first_name",contactdetails.getJSON("First_Name"));
+	conmp.put("last_name",contactdetails.getJSON("Last_Name"));
+	conmp.put("designation",contactdetails.getJSON("Position"));
+	conmp.put("department",contactdetails.getJSON("Department"));
+	conmp.put("website",contactdetails.getJSON("Website"));
+	conmp.put("email",contactdetails.getJSON("Email"));
+	conmp.put("phone",contactdetails.getJSON("Phone"));
+	conmp.put("mobile",contactdetails.getJSON("Mobile"));
+	conmp.put("contact_type","customer");
+	conmp.put("portal_status","enabled");
+	//	conmp.put("customer_sub_type", "business");
+	conmp.put("twitter",contactdetails.getJSON("Twitter"));
+	conmp.put("billing_address",{"address":MailingStreet,"city":MailingCity,"state":MailingState,"zip":MailingZip,"country":MailingCountry});
+	conmp.put("shipping_address",{"address":OtherStreet,"city":OtherCity,"state":OtherState,"zip":OtherZip,"country":OtherCountry});
+	conmp.put("contact_persons",{{"first_name":FirstName,"last_name":LastName,"email":Email,"phone":Phone,"department":Department,"designation":Position,"skype":SkypeID,"fax":Fax,"mobile":Mobile}});
+	createcontact = zoho.books.createRecord("Contacts","690963922",conmp);
+	customerid = createcontact.getJSON("contact_id");
+	customername = createcontact.getJSON("contact_name");
+}
+else if(customer.size() = 1)
+{
+	customerid = customer.getJSON("contact_id");
+	customername = customer.getJSON("contact_name");
+}
+// 		for each  ele in customer
+else if(customer.size() > 1)
+{
+	for each  ele in customer
+	{
+		booksemail = ele.get("email");
+		if(booksemail == Email)
+		{
+			customerid = ele.toMap().get("contact_id");
+			customername = ele.toMap().get("contact_name");
+		}
+	}
+}
+else
+{
+	info "Some problem in contacts";
+}
+productData = soData.get("Product_Details");
+for each  pro in productData
+{
+	if(pro.get("quantity") > 0)
+	{
+		// 	productname = pro.get("product").get("name");
+		// 	productsearch = zoho.books.getRecords("Items","690963922",{"name":productname});
+		productname = pro.get("product").get("name");
+		//productsearch = zoho.books.getRecords("Items", "690963922",{"contact_name":productname});
+		productcode = pro.get("product").get("Product_Code");
+		productid = pro.get("product").get("id");
+		//	productname = pro.get("product").get("name");
+		productquantity = pro.get("quantity");
+		productDiscount = pro.get("Discount");
+		producttotalafterdiscount = pro.get("total_after_discount");
+		productnettotal = pro.get("net_total");
+		productTax = pro.get("Tax");
+		linetax = pro.get("line_tax");
+		productlistprice = pro.get("list_price");
+		productunitprice = pro.get("unit_price");
+		productquantityinstock = pro.get("quantity_in_stock");
+		producttotal = pro.get("total");
+		lineitemid = pro.get("id");
+		productdescription = pro.get("product_description");
+		mp = Map();
+		//mp.put("item_id",productid);
+		//mp.put("product_id",productid);
+		mp.put("name",productname);
+		if(linetax.size() > 0)
+		{
+			mp.put("tax_id","1898350000000942053");
+		}
+		mp.put("description",productdescription);
+		mp.put("rate",productlistprice);
+		mp.put("quantity",productquantity);
+		//mp.put("discount_amount",productDiscount);
+		mp.put("discount",productDiscount);
+		mp.put("item_total",producttotal);
+		//	mp.put("item_sub_total",productnettotal);
+		pdlist.add(mp);
+	}
+}
+somap = Map();
+somap.put("line_items",pdlist);
+//somap.put("invoice_number",soData.getJSON("Auto_Invoice_Number"));
+//somap.put("status","open");
+somap.put("customer_name",customername);
+somap.put("customer_id",customerid);
+//somap.put("sku",productcode);
+//somap.put("order_status","open");
+somap.put("date",soData.getJSON("Invoice_Date"));
+somap.put("due_date",soData.getJSON("Due_Date"));
+// 	somap.put("adjustment",soData.getJSON("Adjustment"));
+somap.put("shipping_charge",soData.getJSON("Adjustment"));
+somap.put("terms",soData.getJSON("Terms_and_Conditions"));
+//somap.put("billing_address",{"address":Billing_Street,"city":Billing_City,"state":Billing_State,"zip":Billing_Code,"country":Billing_Country});
+//somap.put("shipping_address",{"address":Shipping_Street,"city":Shipping_City,"state":Shipping_State,"zip":Shipping_Code,"country":Shipping_Country});
+//info somap;
+createso = zoho.books.createRecord("Invoices","690963922",somap);
+//info createso;
+//resStr = createso.toString();
+//resMap = resStr.toMap();
+estimateStr = createso.getJSON("invoice");
+//estimateMap = estimateStr.toMap();
+invoiceId = estimateStr.getJSON("invoice_id");
+//invoiceId = createso.get("salesorder").getJSON("salesorder_id");
+//shipping address updation 
+shippingmap = Map();
+shippingmap.put("address",ifnull(soData.getJSON("Shipping_Street"),""));
+shippingmap.put("city",ifnull(soData.getJSON("Shipping_City"),""));
+shippingmap.put("state",ifnull(soData.getJSON("Shipping_State"),""));
+shippingmap.put("zip",ifnull(soData.getJSON("Shipping_Code"),""));
+shippingmap.put("country",ifnull(soData.getJSON("Shipping_Country"),""));
+shippingmap.put("phone",ifnull(soData.getJSON("Shipping_Phone"),""));
+headerMap = Map();
+auth = postUrl("https://accounts.zoho.com/oauth/v2/token?refresh_token=1000.555e5077b7c0eb7cc8d4392df19872eb.76819c60afb5e30a3fb875777d7bc667&client_id=1000.05RG5YKB8F9MHJR8JT6JWYSCOXZM5H&client_secret=d12762f2445a6438186ca40071a9a8d54fa1cc8a68&grant_type=refresh_token","");
+authtoken = auth.get("access_token");
+headerMap.put("X-HTTP-Method-Override","PUT");
+key = "Zoho-oauthtoken " + authtoken;
+headerMap.put("Authorization",key);
+shippingurlstr = "https://books.zoho.com/api/v3/invoices/" + invoiceId + "/address/shipping?ignore_auto_number_generation=true&organization_id=690963922&JSONString=" + shippingmap;
+shippingupdate = postUrl(shippingurlstr,shippingmap,headerMap);
+//info shippingupdate;
+//billing address updation
+billingmap = Map();
+billingmap.put("address",ifnull(soData.getJSON("Billing_Street"),""));
+billingmap.put("city",ifnull(soData.getJSON("Billing_City"),""));
+billingmap.put("state",ifnull(soData.getJSON("Billing_State"),""));
+billingmap.put("zip",ifnull(soData.getJSON("Billing_Code"),""));
+billingmap.put("country",ifnull(soData.getJSON("Billing_Country"),""));
+billingmap.put("phone",ifnull(soData.getJSON("Billing_Phone"),""));
+billingurlstr = "https://books.zoho.com/api/v3/invoices/" + invoiceId + "/address/billing?ignore_auto_number_generation=true&organization_id=690963922&JSONString=" + billingmap;
+billingupdate = postUrl(billingurlstr,billingmap,headerMap);
+//info billingupdate;
+
+
+Send SalesOrder record to Inventory
+orgId = "667088603";
+// Get Quote Details from CRM
+salesorderDetails = zoho.crm.getRecordById("Sales_Orders",soId.toLong());
+info salesorderDetails;
+acctId = ifnull(salesorderDetails.get("Account_Name"),"").get("id");
+acctname = ifnull(salesorderDetails.get("Account_Name"),"").get("name");
+warehouse = ifnull(salesorderDetails.get("Warehouse"),"");
+pan = ifnull(salesorderDetails.get("PAN_No"),"");
+branch = ifnull(salesorderDetails.get("Branch_Name"),"");
+poDate = ifnull(salesorderDetails.get("PO_DATE"),"");
+productCategory = ifnull(salesorderDetails.get("Product_Category"),"");
+paymentTerms = ifnull(salesorderDetails.get("Payment_terms"),"");
+transportScope = ifnull(salesorderDetails.get("Transport_Scope"),"");
+info warehouse;
+info pan;
+info branch;
+info poDate;
+info productCategory;
+info paymentTerms;
+info transportScope;
+info acctId;
+info acctname;
+accountDetails = zoho.crm.getRecordById("Accounts",acctId);
+custNumber = accountDetails.get('Customer_Number');
+query_param = Map();
+query_param.put("contact_name",acctname);
+acctsearch = zoho.inventory.getRecords("Contacts",orgId,query_param);
+info acctsearch;
+for each  rec in acctsearch.get("contacts")
+{
+	inventoryContactID = rec.get("contact_id");
+}
+prodList = salesorderDetails.get("Product_Details").toJSONList();
+productList = List();
+for each  rec in prodList
+{
+	mp = Map();
+	mp.put("name",rec.get("product").get("name"));
+	mp.put("rate",ifnull(rec.get("list_price"),""));
+	mp.put("quantity",ifnull(rec.get("quantity"),""));
+	//mp.put("tax",ifnull(rec.get("tax"),""));
+	mp.put("warehouse",warehouse);
+	productList.add(mp);
+}
+info productList;
+cmap = Map();
+cmap.put("customer_id",inventoryContactID);
+//cmap.put("payment_terms",paymentTerms);
+cmap.put("line_items",productList);
+createRec = zoho.inventory.createRecord("SalesOrders",orgId,cmap);
+info createRec;
+id = ifnull(createRec.get("salesorder").get("salesorder_id"),"");
+info id;
+CustomFields = {{"value":pan,"label":"PAN"},{"value":branch,"label":"Branch"},{"value":poDate,"label":"Purchase Order Date"},{"value":transportScope,"label":"Transport Scope"},{"value":paymentTerms,"label":"Payment Terms"},{"value":productCategory,"label":"Product Division"}};
+ProductMap = Map();
+ProductMap.put("custom_fields",CustomFields);
+UpdateItem = zoho.inventory.updateRecord("SalesOrders",orgId,id,ProductMap);
+//info "cmap : " + cmap;
+info "UpdateItem : " + UpdateItem;
+
+Woocommerce Update Variations
+
+itemName = item.get("name");
+itemId = item.get("item_id");
+GetRecord = zoho.inventory.getRecordsByID("Items","51778066",itemId);
+GetItem = GetRecord.get("item");
+GetSku = ifnull(GetItem.get("sku"),"");
+GetsellingPrice = ifnull(GetItem.get("sales_rate"),"");
+GetDiscription = ifnull(GetItem.get("description"),"");
+GetImageName = ifnull(GetItem.get("image_name"),"");
+GetImageType = ifnull(GetItem.get("image_type"),"");
+GetCustomFileds = GetItem.get("custom_fields");
+HeaderMap = Map();
+HeaderMap.put("Content-Type","application/json");
+for each  record in GetCustomFileds
+{
+	Get_Lable = record.get("label");
+	// 	if(Get_Lable == "WC Description")
+	// 	{
+	// 		GetValue = ifnull(record.get("value_formatted"),"");
+	// 		//remove control characters.
+	// 		GetValue = replaceAll(GetValue,"\n","<br/>");
+	// 		info GetValue;
+	// 	}
+	if(Get_Lable == "WC Product Id")
+	{
+		GetValueProductid = ifnull(record.get("value_formatted"),"");
+		info GetValueProductid;
+	}
+	if(Get_Lable == "WC Title")
+	{
+		Getwctitle = ifnull(record.get("value_formatted"),"");
+		info Getwctitle;
+	}
+	if(Get_Lable == "Store Classification")
+	{
+		GetStoreClassification = ifnull(record.get("value_formatted"),"");
+		info GetStoreClassification;
+	}
+	// 	if(Get_Lable == "WC Short Description")
+	// 	{
+	// 		//info record;
+	// 		GetWCShortDescription = ifnull(record.get("value_formatted"),"");
+	// 		GetWCShortDescription = replaceAll(GetWCShortDescription,"\n","<br/>");
+	// 	}
+}
+WC_Stock_Status = "outofstock";
+//initialize
+if(GetStoreClassification == "Triton Stocked")
+{
+	WC_Stock_Status = "instock";
+}
+else if(GetStoreClassification == "Supplier Stocked")
+{
+	WC_Stock_Status = "onbackorder";
+}
+else if(GetStoreClassification == "Contact for Availability")
+{
+	WC_Stock_Status = "outofstock";
+}
+/*
+Make an api call to get this sku from woo commerce..
+*/
+GetSKURecord = invokeurl
+[
+	url :"https://tritond.kinsta.cloud/wp-json/wc/v3/products?sku=" + GetSku + "&consumer_key=ck_375d1747bea416e8134a127ef726a53f488aa015&consumer_secret=cs_2533f2e0be52442296af6bcd384582abc3a43187"
+	type :GET
+	headers:HeaderMap
+];
+info GetSKURecord;
+//found in woo
+if(GetSKURecord)
+{
+	WooID = ifnull(GetSKURecord.getJSON("id"),"");
+	info WooID;
+	//is this product a variation?
+	GetIsVariation = invokeurl
+	[
+		url :"https://tritond.kinsta.cloud/wp-json/wc/v3/products/" + WooID + "?consumer_key=ck_375d1747bea416e8134a127ef726a53f488aa015&consumer_secret=cs_2533f2e0be52442296af6bcd384582abc3a43187"
+		type :GET
+		headers:HeaderMap
+	];
+	info GetIsVariation.getJSON("type");
+	if(GetIsVariation.getJSON("type") == 'variation')
+	{
+		//update only price and stockstatus
+		UpdateData = {"regular_price":GetsellingPrice.toString(),"stock_status":WC_Stock_Status};
+		info UpdateData;
+		//this is a variation type product
+		//now, update this record in wc
+		UpdateWcRecord = invokeurl
+		[
+			url :"https://tritond.kinsta.cloud/wp-json/wc/v3/products/" + WooID + "?consumer_key=ck_375d1747bea416e8134a127ef726a53f488aa015&consumer_secret=cs_2533f2e0be52442296af6bcd384582abc3a43187"
+			type :PUT
+			parameters:UpdateData.toString()
+			headers:HeaderMap
+		];
+		info "variation update";
+		info UpdateWcRecord;
+	}
+	else
+	{
+		//now, update this record in wc.. regular product
+		UpdateData = {"name":Getwctitle,"regular_price":GetsellingPrice.toString(),"sku":GetSku,"stock_status":WC_Stock_Status};
+		info UpdateData;
+		UpdateWcRecord = invokeurl
+		[
+			url :"https://tritond.kinsta.cloud/wp-json/wc/v3/products/" + WooID + "?consumer_key=ck_375d1747bea416e8134a127ef726a53f488aa015&consumer_secret=cs_2533f2e0be52442296af6bcd384582abc3a43187"
+			type :PUT
+			parameters:UpdateData.toString()
+			headers:HeaderMap
+		];
+		info "regular update";
+		info UpdateWcRecord;
+	}
+}
+return HeaderMap;
+
+
+Make api call to get lat long using EXIF metadata stored in image loaded to creator
+
+GetItemImage = invokeurl
+[
+	url :"https://creatorapp.zohopublic.com/file/ysharat_xifinetworks/zoho-survey/Survey_Image_Report/4128809000000046035/POP_Location_Image1/image-download/6uRMmPABSs8u8z727X0m1FbWQNmwBPjTme6hk07TwSsHrDhEzSWk8uuRtmJQYjEkv25M12N3hr1uy1a0R2VRBRqY54bMjCrDArRn?filepath=/1612018079474_failure.jpg"
+	type :GET
+];
+files = List();
+GetItemImage.setParamName("image");
+files.add(GetItemImage);
+response = invokeurl
+[
+	url :"https://exif.gkblabs.com/api/v1/exif"
+	type :POST
+	files:files
+];
+if(response.get("data").size() != 0)
+{
+	input.Latitude = response.get('data').get('latitude');
+	input.Longitude = response.get('data').get('longitude');
+}
+
+Invoke REST api in CRAFT CRM to Insert Record
+
+contactDetails = zoho.crm.getRecordById("Contacts",contactID.toLong());
+//info contactDetails;
+sourceForm = contactDetails.get("Source_Form");
+urlData = "";
+//execute this only for registration.. check for LGP registration or GC Registration
+if(sourceForm == "LGP MP Registration" || sourceForm == "GC Registration")
+{
+	//bookingItemCode = contactDetails.get("Booking_Item_Code");
+	firstName = contactDetails.get("First_Name");
+	lastName = contactDetails.get("Last_Name");
+	phoneNumber = contactDetails.get("Phone");
+	password = contactDetails.get("Password");
+	email = contactDetails.get("Email");
+	primaryState = contactDetails.get("Primary_State");
+	profession = contactDetails.get("Profession");
+	ahpraNumber = contactDetails.get("AHPRA_number");
+	postCode = contactDetails.get("Postal_Code");
+	if(sourceForm == "LGP MP Registration")
+	{
+		urlData = "https://littlegreenpharma.com/register.json";
+	}
+	else if(sourceForm == "GC Registration")
+	{
+		urlData = "https://greenchoices.com.au/register.json";
+	}
+	info urlData;
+	params = Map();
+	params.put("firstName",firstName);
+	params.put("lastName",lastName);
+	params.put("phoneNumber",phoneNumber);
+	params.put("password",password);
+	params.put("email",email);
+	//zoho forms does not allow for a display/value on select lists
+	//and deluge does not offer a switch case.. so ...
+	mappedPrimaryState = "act";
+	if(primaryState == "Australian Capital Territory")
+	{
+		mappedPrimaryState = "act";
+	}
+	else if(primaryState == "New South Wales")
+	{
+		mappedPrimaryState = "nsw";
+	}
+	else if(primaryState == "Northern Territory")
+	{
+		mappedPrimaryState = "nt";
+	}
+	else if(primaryState == "Queensland")
+	{
+		mappedPrimaryState = "qld";
+	}
+	else if(primaryState == "South Australia")
+	{
+		mappedPrimaryState = "sa";
+	}
+	else if(primaryState == "Tasmania")
+	{
+		mappedPrimaryState = "tas";
+	}
+	else if(primaryState == "Victoria")
+	{
+		mappedPrimaryState = "vic";
+	}
+	else if(primaryState == "Western Australia")
+	{
+		mappedPrimaryState = "wa";
+	}
+	params.put("primaryState",mappedPrimaryState);
+	//act, nsw, qld, wa, nt, tas, vic, sa
+	mappedProfession = "gp";
+	//default
+	if(profession == "Specialist")
+	{
+		mappedProfession = "specialist";
+	}
+	else if(profession == "Pharmacist")
+	{
+		mappedProfession = "pharmacist";
+	}
+	else if(profession == "GP")
+	{
+		mappedProfession = "gp";
+	}
+	else if(profession == "Allied Health")
+	{
+		mappedProfession = "alliedhealth";
+	}
+	else if(profession == "Other")
+	{
+		mappedProfession = "other";
+	}
+	params.put("profession",mappedProfession);
+	//specialist, gp, pharmacist, alliedhealth, other
+	params.put("ahpraNumber",ahpraNumber);
+	params.put("agreedToTerms",1);
+	params.put("postCode",postCode);
+	headers = Map();
+	headers.put("Content-Type","application/json");
+	headers.put("X-Oc-Restadmin-Id","FOSBGaetWv4PuWtKTxI85t0Li1ZGQpuE");
+	// 	response = invokeUrl(urlData,"GET",params,headers);
+	// 	info !isNull(response.getJson("error"));
+	try 
+	{
+		info "in final";
+		response = invokeUrl(urlData,"GET",params,headers);
+		if(!isNull(response.getJson("error")))
+		{
+			sendmail
+			[
+				from :zoho.adminuserid
+				to :"nicolasconnault@gmail.com, mshankar@gkblabs.com"
+				subject :"There was an error with insert into Craft:" + sourceForm
+				message :firstName + " " + lastName + " Error Message : " + response.getJson("error").getJson("message")
+			]
+		}
+	}
+ catch (e)
+	{		// Handle Exception here
+		info "Fail quietly";
+		sendmail
+		[
+			from :zoho.adminuserid
+			to :"nicolasconnault@gmail.com, mshankar@gkblabs.com"
+			subject :"(Catch Error Block) There was an error with insert into Craft:" + sourceForm
+			message :firstName + " " + lastName + " " + e
+		]
+	}
+}
+
+
+Update a related sub-list
+
+dealDetails = zoho.crm.getRecordById("Deals",dealID.toLong());
+//info dealDetails;
+bookingItemCode = dealDetails.get("Booking_Item_Code");
+info bookingItemCode;
+//for testing only
+//bookingItemCode = '165847';
+
+if (!isNull(bookingItemCode)){	
+	getProduct=zoho.crm.searchRecords("Products", "(Product_Code:equals:"+bookingItemCode+")");
+
+	product = getProduct.get(0);
+	productID = product.get("id");
+	info productID;
+	//<variable> = zoho.crm.updateRelatedRecord(<sub_module>, <sub_module_record_id>, <parent_module>, <parent_module_record_id>, <values>, <connection>);
+	response = zoho.crm.updateRelatedRecord("Products",productID,"Deals",dealID,{"Deals":dealID});	
+	//info response;
+}
+
+Create an estimate from a deal
+
+dealDetails = zoho.crm.getRecordById("Deals",dealID.toLong());
+//info dealDetails;
+customerid = dealDetails.get("Contact_Name").get("id");
+searchParam = {"zcrm_contact_id":customerid};
+booksCustomer = zoho.books.getRecords("Contacts","20071610706",searchParam);
+for each  rec in booksCustomer.get("contacts")
+{
+	customerID = rec.get("contact_id");
+}
+//info booksCustomer.get("contacts")[0].get("contact_id");
+info customerID;
+//customerID = '125392000000041013';
+//this is the contact id corresponding to adventure tours and travels.
+bookingReferenceNumber = dealDetails.get("Booking_Reference_Number");
+bookingNumbrofParticepants = dealDetails.get("Booking_Number_of_Participants");
+bookingItemName = dealDetails.get("Booking_Item_Name");
+description = dealDetails.get("Description");
+amount = dealDetails.get("Amount");
+bookingTax = dealDetails.get("Tax");
+bookingID = dealDetails.get("Booking_ID");
+contactID = dealDetails.get("Contact_Name").get('id');
+closingDate = dealDetails.get("Closing_Date");
+//info customerID;
+itemList = List:Map();
+itemList.add({"ItemName":bookingItemName,"ItemDescription":description,"Price":amount});
+//info itemList;
+invMap = Map();
+invMap.put("customer_id",customerID);
+invMap.put('invoice_date',closingDate);
+invMap.put("contact",contactID);
+itemsList = List();
+item = Map();
+//if there are multiple items they need to be looped through and added here..
+// for each line in input.subform
+// {
+item.put("name",bookingItemName);
+item.put("rate",amount);
+item.put("tax",bookingTax);
+item.put("reference",bookingReferenceNumber);
+item.put("quantity",bookingNumbrofParticepants);
+itemsList.add(item);
+//}
+invMap.put("line_items",itemsList);
+// estimateInfo = {"EstimateDate":zoho.currentdate,"ReferenceNumber":123,"Items":itemList};
+// info estimateInfo;
+//resp = zoho.books.createRecord('Estimates','20071610706',estimateInfo);\
+// searchParam = {"contact_name":"Will Smith"}; 
+// response= zoho.books.getRecords("Contacts", "53XXXXXX", searchParam);
+response = zoho.books.createRecord("Estimates","20071610706",invMap);
+if(response.get("code") == 0)
+{
+	return "Estimate generated successfully!";
+}
+else
+{
+	return response.get("message");
+}
+
+Update Product (Triton)
+
+//update product from zoho to woocommerce
+itemName = item.get("name");
+HeaderMap = Map();
+HeaderMap.put("Content-Type","application/json");
+itemId = item.get("item_id");
+GetRecord = zoho.inventory.getRecordsByID("Items","51778066",itemId);
+GetItem = GetRecord.get("item");
+GetSku = ifnull(GetItem.get("sku"),"");
+GetsellingPrice = ifnull(GetItem.get("sales_rate"),"");
+GetDiscription = ifnull(GetItem.get("description"),"");
+GetImageName = ifnull(GetItem.get("image_name"),"");
+GetImageType = ifnull(GetItem.get("image_type"),"");
+GetCustomFileds = GetItem.get("custom_fields");
+for each  record in GetCustomFileds
+{
+	Get_Lable = record.get("label");
+	if(Get_Lable == "WC Description")
+	{
+		GetValue = ifnull(record.get("value_formatted"),"");
+		//remove control characters.
+		GetValue = replaceAll(GetValue,"\n","<br/>");
+		info GetValue;
+	}
+	if(Get_Lable == "WC Product Id")
+	{
+		GetValueProductid = ifnull(record.get("value_formatted"),"");
+		info GetValueProductid;
+	}
+	if(Get_Lable == "WC Title")
+	{
+		Getwctitle = ifnull(record.get("value_formatted"),"");
+		info Getwctitle;
+	}
+}
+GetItemImage = invokeurl
+[
+	url :"https://inventory.zoho.com/api/v1/items/" + itemId + "/image?authtoken=7bd6fe1ef89c4339d73f9d2afaa5da68&organization_id=51778066"
+	type :GET
+];
+files = List();
+GetItemImage.setParamName("prodImage");
+files.add(GetItemImage);
+//upload item image into WP(Media).. only if there is no featured image
+CheckFeaturedImage = invokeurl
+[
+	url :"https://tritoncomsys.com/wp-json/wc/v3/products/" + GetValueProductid + "?consumer_key=ck_70ba4e1f60c5612dd1c0061d11e69617f9ed7461&consumer_secret=cs_42fded4462ba36a31a950f75af590920607c484a"
+	type :get
+];
+if(CheckFeaturedImage.get('images').size() == 0)
+{
+	info "No cover image.. loading pic";
+	ImageUpload = invokeurl
+	[
+		url :"https://tritoncomsys.com/wp-json/triton/v1/media/image-upload?consumer_key=ck_70ba4e1f60c5612dd1c0061d11e69617f9ed7461&consumer_secret=cs_42fded4462ba36a31a950f75af590920607c484a"
+		type :POST
+		files:files
+	];
+	info ImageUpload;
+	GetWpImageUrl = ImageUpload.get("data");
+	GetWpImageID = GetWpImageUrl.get('ID');
+	info GetWpImageID;
+	//,"short_description":GetDiscription - this should not be overwritten per client communication 5/29/2020
+	UpdateData = {"name":Getwctitle,"regular_price":GetsellingPrice.toString(),"sku":GetSku,"description":GetValue,"images":{{"id":GetWpImageID}}};
+}
+else
+{
+	info "has cover image.. skipping pic";
+	UpdateData = {"name":Getwctitle,"regular_price":GetsellingPrice.toString(),"sku":GetSku,"description":GetValue};
+}
+info UpdateData;
+UpdateRecord = invokeurl
+[
+	url :"https://tritoncomsys.com/wp-json/wc/v3/products/" + GetValueProductid + "?consumer_key=ck_70ba4e1f60c5612dd1c0061d11e69617f9ed7461&consumer_secret=cs_42fded4462ba36a31a950f75af590920607c484a"
+	type :PUT
+	parameters:UpdateData.toString()
+	headers:HeaderMap
+];
+info UpdateRecord;
+return HeaderMap;
+
+MoveToStore (HOGAR)
+
+// Get Sales_Orders Details from CRM
+orgid = "713153073";
+salesorderDetails = zoho.crm.getRecordById("Sales_Orders",id.toLong());
+acctId = ifnull(salesorderDetails.get("Account_Name"),"").get("id");
+disc = ifnull(salesorderDetails.get("Discount"),"0.0").toDecimal();
+acctsearch = zoho.books.getRecords("Contacts",orgid,"zcrm_account_id=" + acctId).get("contacts").toJSONList();
+info acctsearch;
+custId = acctsearch.get(0).get("contact_id");
+count = 0;
+prodlist = List();
+quoteProdList = salesorderDetails.get("Product_Details").toJSONList();
+for each  eachProd in quoteProdList
+{
+	prodName = eachProd.get("product").get("name");
+	qty = ifnull(eachProd.get("quantity"),"");
+	ListPrice = ifnull(eachProd.get("list_price"),"");
+	indTax = ifnull(eachProd.get("Tax"),"");
+	discount = ifnull(eachProd.get("Discount"),0.0);
+	Total = ifnull(eachProd.get("total"),0.0);
+	crmpordId = eachProd.get("product").get("id");
+	prodinfo = zoho.crm.getRecordById("Products",crmpordId);
+	hsn = ifnull(prodinfo.get("HSN_Code"),"");
+	ProdDecription = ifnull(eachProd.get("product_description"),"");
+	itemsearch1 = zoho.books.getRecords("Items",orgid,"zcrm_product_id=" + crmpordId);
+	//info itemsearch1;
+	itemsearch = itemsearch1.get("items").toJSONList();
+	//info itemsearch;
+	for each  ele in itemsearch
+	{
+		itemId = ifnull(ele.get("item_id"),"");
+		//info itemId;
+		taxid = ifnull(ele.get("tax_id"),"");
+		//info taxid;
+		Prodcode = ifnull(ele.get("sku"),"");
+		//info Prodcode;
+	}
+	itemcustlist = List();
+	itemmp = Map();
+	itemmp.put("label","HSN/SAC");
+	itemmp.put("value",hsn);
+	itemcustlist.add(itemmp);
+	prodmp = Map();
+	prodmp.put("item_id",itemId);
+	prodmp.put("description",ProdDecription);
+	//prodmp.put("item_order",count);
+	//prodmp.put("tax_id",taxid);
+	prodmp.put("rate",ListPrice);
+	prodmp.put("sku",Prodcode);
+	prodmp.put("quantity",qty);
+	prodmp.put("discount",discount);
+	prodmp.put("item_custom_fields",itemcustlist);
+	prodlist.add(prodmp);
+	count = count + 1;
+}
+status = ifnull(salesorderDetails.get("Status"),"");
+status = ifnull(salesorderDetails.get("Status"),"");
+custlist = List();
+custmp = Map();
+custmp.put("label","Order Reference No");
+custmp.put("value",ifnull(salesorderDetails.get("Order_Reference_No"),""));
+custlist.add(custmp);
+custmp1 = Map();
+custmp1.put("label","Order Reference Date");
+custmp1.put("value",ifnull(salesorderDetails.get("Order_Reference_Date"),""));
+custlist.add(custmp1);
+jsonMap = Map();
+jsonMap.put("customer_id",custId);
+jsonMap.put("custom_fields",custlist);
+jsonMap.put("shipping_charge",ifnull(salesorderDetails.get("Shipping_Incl_Tax"),0));
+jsonMap.put("line_items",prodlist);
+jsonMap.put("salesorder_number",ifnull(salesorderDetails.get("Sales_Order_No1"),""));
+jsonMap.put("reference_number",ifnull(salesorderDetails.get("Subject"),""));
+jsonMap.put("delivery_method",ifnull(salesorderDetails.get("Carrier"),""));
+jsonMap.put("shipment_date",ifnull(salesorderDetails.get("Due_Date"),""));
+jsonMap.put("notes",ifnull(salesorderDetails.get("Description"),""));
+createOrder = zoho.inventory.createRecord("SalesOrders",orgid,jsonMap);
+info createOrder;
+ki = createOrder.get("salesorder").getJson("customer_id");
+i = createOrder.get("salesorder");
+//info i ;
+inv_id = i.get("salesorder_id");
+//info inv_id;
+m = Map();
+m.put("address",ifnull(salesorderDetails.get("Shipping_Street"),""));
+//m.put("street2","Suit 310");
+m.put("city",ifnull(salesorderDetails.get("Shipping_City"),""));
+m.put("state",ifnull(salesorderDetails.get("Shipping_State"),""));
+m.put("zip",ifnull(salesorderDetails.get("Shipping_Code"),""));
+m.put("country",ifnull(salesorderDetails.get("Shipping_Country"),""));
+m.put("update_existing_transactions_address",false);
+n = Map();
+n.put("JSONString",m);
+info n;
+info "https://inventory.zoho.com/api/v1/contacts/" + ki + "/address?organization_id=" + orgid + "&authtoken=9f08562416be3883aa949f689c2a222d";
+tk = invokeurl
+[
+	url :"https://inventory.zoho.com/api/v1/contacts/" + ki + "/address?organization_id=" + orgid + "&authtoken=9f08562416be3883aa949f689c2a222d"
+	type :POST
+	parameters:n
+];
+info tk;
+mp = Map();
+mp.put("shipping_address_id",tk.getJson("address_info").getJson("address_id"));
+info mp;
+update_so = zoho.inventory.updateRecord("SalesOrders",orgid,createOrder.getJson("salesorder").getJson("salesorder_id"),mp);
+info update_so;
+
+	
+Get Tax, Discount and Price List (HOGAR)
+
+//salesorder id is argument to this deluge function
+soinfo = zoho.crm.getRecordById("Sales_Orders",soid.toLong());
+acctid = soinfo.get("Account_Name").get("id");
+acctname = soinfo.get("Account_Name").get("name");
+acctinfo = zoho.crm.getRecordById("Accounts",acctid);
+price = ifnull(acctinfo.get("Price_List_Value"),0.0);
+proddetails = soinfo.get("Product_Details");
+prodlist = List();
+bacctinfo = getUrl("https://books.zoho.com/api/v3/contacts?authtoken=8778969fe06ac1dfbf4bde37121df7c5&organization_id=713153073&zcrm_account_id=" + acctid).get("contacts").toJSONList();
+info bacctinfo;
+for each  rec2 in bacctinfo
+{
+	custId = rec2.getJSON("contact_id");
+	info custId;
+}
+orgid = "713153073";
+bookscontDetails = zoho.books.getRecordsByID("Contacts",orgid,custId);
+contactstring1 = bookscontDetails.get("contact");
+contactList1 = contactstring1.toJSONList();
+for each  rec1 in contactList1
+{
+	taxname = "GST";
+	//ifnull(rec1.getJSON("tax_name"),"");
+	taxper = 18.00;
+	// ifnull(rec1.getJSON("tax_percentage"),"0.0").toDecimal();
+	cffields = ifnull(rec1.getJSON("custom_fields"),"");
+	pricebookid = rec1.getJSON("pricebook_id");
+	info pricebookid;
+	for each  field in cffields
+	{
+		name = field.get("label");
+		if(name == "Discount Rate")
+		{
+			discount = ifnull(field.get("value"),0.0).todecimal();
+		}
+	}
+}
+for each  rec3 in proddetails
+{
+	prodid = rec3.get("product").get("id");
+	itemlist = getUrl("https://books.zoho.com/api/v3/items?organization_id=713153073&authtoken=8778969fe06ac1dfbf4bde37121df7c5&zcrm_product_id=" + prodid).get("items").toJSONList();
+	for each  rec4 in itemlist
+	{
+		itemid = rec4.get("item_id");
+	}
+	iteminfo = zoho.books.getRecordsByID("Items",orgid,itemid).get("item").toJSONList();
+	for each  rec5 in iteminfo
+	{
+		itemid = rec5.get("item_id");
+		getspecial_discount = ifnull(rec5.get("cf_special_discount"),"0.0").toDecimal();
+	}
+	pricebookinfo = getUrl("https://books.zoho.com/api/v3/pricebooks/" + pricebookid + "?organization_id=713153073&authtoken=8778969fe06ac1dfbf4bde37121df7c5").get("pricebook").get("pricebook_items").toJSONList();
+	for each  ele in pricebookinfo
+	{
+		pitemid = ele.get("item_id");
+		if(itemid == pitemid)
+		{
+			price = ifnull(ele.get("pricebook_rate"),0.0).toDecimal();
+			if(price != 0.0)
+			{
+				newprice = price;
+			}
+			if(price == 0.0)
+			{
+				newprice = 0.0;
+			}
+		}
+	}
+	prodmp = Map();
+	prodmp.put("product",prodid);
+	if(newprice != 0.0)
+	{
+		listprice = newprice;
+	}
+	else
+	{
+		listprice = ifnull(rec3.get("list_price"),0.0);
+	}
+	prodmp.put("list_price",listprice);
+	prodmp.put("quantity",rec3.get("quantity"));
+	if(getspecial_discount == 0.0)
+	{
+		prodmp.put("Discount",listprice * rec3.get("quantity") * discount / 100);
+	}
+	else
+	{
+		prodmp.put("Discount",listprice * rec3.get("quantity") * getspecial_discount / 100);
+	}
+	prodlist.add(prodmp);
+}
+update = zoho.crm.updateRecord("Sales_Orders",soid,{"$line_tax":{{"name":taxname,"percentage":taxper}},"Product_Details":prodlist});
+info update;
+
+
+Create Product in WooCommerce (From Zoho)
+itemName = item.get("name");
+HeaderMap = Map();
+HeaderMap.put("Content-Type","application/json");
+itemId = item.get("item_id");
+GetRecord = zoho.inventory.getRecordsByID("Items","51778066",itemId);
+GetItem = GetRecord.get("item");
+info GetItem;
+GetSku = ifnull(GetItem.get("sku"),"");
+GetsellingPrice = ifnull(GetItem.get("sales_rate"),"");
+GetDiscription = ifnull(GetItem.get("description"),"");
+GetCustomFileds = GetItem.get("custom_fields");
+for each  record in GetCustomFileds
+{
+	Get_Lable = record.get("label");
+	if(Get_Lable == "Woocommerce Description")
+	{
+		GetValue = ifnull(record.get("value_formatted"),"");
+	}
+}
+GetItemImage = invokeurl
+[
+	url :"https://inventory.zoho.com/api/v1/items/" + itemId + "/image?authtoken=7bd6fe1ef89c4339d73f9d2afaa5da68&organization_id=51778066"
+	type :GET
+];
+files = List();
+GetItemImage.setParamName("prodImage");
+files.add(GetItemImage);
+//upload item image into WP(Media)
+ImageUpload = invokeurl
+[
+	url :"https://tritoncomsys.com/wp-json/triton/v1/media/image-upload?consumer_key=ck_70ba4e1f60c5612dd1c0061d11e69617f9ed7461&consumer_secret=cs_42fded4462ba36a31a950f75af590920607c484a"
+	type :POST
+	files:files
+];
+info ImageUpload;
+GetWpImageUrl = ImageUpload.get("data");
+GetWpImageID = GetWpImageUrl.get('ID');
+info GetWpImageID;
+info GetWpImageUrl;
+Data = {"name":GetDiscription,"regular_price":GetsellingPrice.toString(),"sku":GetSku,"description":GetValue,"status":"draft","short_description":GetDiscription,"images":{{"id":GetWpImageID}}};
+info Data;
+//Create Product in WP
+CreateRecord = invokeurl
+[
+	url :"https://tritoncomsys.com/wp-json/wc/v3/products?consumer_key=ck_70ba4e1f60c5612dd1c0061d11e69617f9ed7461&consumer_secret=cs_42fded4462ba36a31a950f75af590920607c484a"
+	type :POST
+	parameters:Data.toString()
+	headers:HeaderMap
+];
+info CreateRecord;
+GetCreatedProductId = CreateRecord.get("id");
+info GetCreatedProductId;
+CustomFields = {{"value":GetCreatedProductId,"label":"Woocommerce Product Id"}};
+ProductMap = Map();
+ProductMap.put("custom_fields",CustomFields);
+UpdateItem = zoho.inventory.updateRecord("Items","51778066",itemId,ProductMap);
+return HeaderMap;
+
