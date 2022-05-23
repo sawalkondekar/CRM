@@ -1,0 +1,22 @@
+quest_order_record = zoho.crm.getRecordById("Quest_Patients",ID.toLong(),"crm"); //crm is connection name
+info quest_order_record;
+doctor_name = quest_order_record.get("Doctor_Name");
+info doctor_name;
+//Mark Smith = 4594870000005114002
+//Alicia = 4594870000020569119
+if(doctor_name != null)
+{
+	info "Test 1";
+	doctor_id = doctor_name.get("id");
+	info doctor_id;
+	if(doctor_id == 4594870000004275070)
+	{
+		info "Test 2";
+		mp = Map();
+		mp.put("Doctor_Name",4594870000004280031);
+		info mp;
+		//update = zoho.crm.updateRecord("Quest_Orders",ID,mp,"crm");
+		update = zoho.crm.updateRecord("Quest_Patients",ID,mp,Map(),"crm");
+		info update;
+	}
+}
