@@ -1,0 +1,13 @@
+acctname = "test account";
+relatedrecords = zoho.crm.searchRecords("Accounts","(Account_Name:equals:"+ acctname +")");
+info relatedrecords;
+if( relatedrecords.size() > 0)
+{
+	idlist = List();
+	for each ele in relatedrecords
+	{
+		idlist.add(ele.get("id"));
+	}
+}
+info "idlist : " + idlist;
+
