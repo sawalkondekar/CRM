@@ -1,1 +1,4 @@
 Shipping_Street = ifnull(Accounts.get("Shipping_Street"),"");
+
+  // if (!shippin_street)
+ // if !null(shipping_street)
