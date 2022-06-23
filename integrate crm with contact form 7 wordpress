@@ -1,3 +1,13 @@
 - for integrating contact form 7 from wordpress with zoho crm, then use this pluging - https://wordpress.org/plugins/cf7-zoho/
 Name - Integration for Contact Form 7 and Zoho CRM, Bigin
 By CRM Perks
+
+/////////above not working which told by Badal -GKB
+
+
+//////////////
+
+Zoho CRM Lead Magnet - Plugin Name 
+is working .. also after have to use 
+- zoho console for client id and client secret for client id and client secret for 
+-- and go into zoho CRM forms from left hand side for client id and secret
