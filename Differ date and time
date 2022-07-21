@@ -1,0 +1,10 @@
+interview_date_1 = input.Interview_Start_Date_Time;
+interview_date = toDate(interview_date_1,"MM,d,yyyy");
+interview_time_1 = input.Interview_Start_Date_Time;
+interview_time_2 = interview_time_1.getHour();
+//interview_time_3 = interview_time_1.getMinutes();
+//info "interview_time_3" + interview_time_3;
+int_time = interview_date_1.toString();
+interview_time_4 = int_time.subString(15,17);
+//info "interview_time_4" + interview_time_4;
+interview_time = interview_time_2 + ":" + interview_time_4;
