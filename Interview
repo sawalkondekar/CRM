@@ -1,2 +1,12 @@
 Layout Rules - we can hide or show fields 
-              also we can hide or show the sections
+              also we can hide or show the sections 
+              
+Blueprint - define sequence of stages - and do automation based on that
+
+Approval Process - Based on condition we can set a task - like who can approve (On record creation or edit record)
+                    and after approval what will happen like email, set task, call function etc.
+               b.after rejection - also what will happen like same email, task, call function etc we can call     
+            
+Review Process - we can set to review particular fields and send email notification if the criteria matched.
+
+Command Center - similar to blueprint i think, same state, and condtions we can use like function call, update field etc
