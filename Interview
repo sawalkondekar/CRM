@@ -1,7 +1,9 @@
+PROCESS MANAGEMENT SECTION IN SETTING
+
 Layout Rules - we can hide or show fields 
               also we can hide or show the sections 
               
-Blueprint - define sequence of stages - and do automation based on that
+Blueprint - define sequence of stages - and do automation based on that 
 
 Approval Process - Based on condition we can set a task - like who can approve (On record creation or edit record)
                     and after approval what will happen like email, set task, call function etc.
