@@ -15,3 +15,5 @@ Command Center - similar to blueprint i think, same state, and condtions we can 
 
 - Import / Export report
     go to setting - then export or import option
+    
+- client script = used javascript , on load of form, on event, on save we can add javascript code 
