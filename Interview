@@ -12,3 +12,6 @@ Approval Process - Based on condition we can set a task - like who can approve (
 Review Process - we can set to review particular fields and send email notification if the criteria matched.
 
 Command Center - similar to blueprint i think, same state, and condtions we can use like function call, update field etc
+
+- Import / Export report
+    go to setting - then export or import option
