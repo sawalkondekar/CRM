@@ -1,0 +1,32 @@
+abc = SID.toList("|||"); // sid is id of the module
+info abc;
+date2 = zoho.currentdate;
+for each  rec in abc
+{
+	res = zoho.crm.getRecordById("Submittals",rec);
+	date1 = res.get("End_Date").toDate();
+	if(date1 != null)
+	{
+		if(date1 < zoho.currentdate)
+		{
+			info "Less than";
+			date3 = date2.toStartOfWeek();
+		}
+		else
+		{
+			info "Greater than";
+			date3 = date2.toStartOfWeek().addWeek(1);
+		}
+	}
+	info date3;
+	createmap = Map();
+	createmap.put("Submittal_Name",res.get("Name"));
+	createmap.put("Type","Service Deposit");
+	createmap.put("Submittal_ID",rec);
+	createmap.put("Srvc_W_E_Date",date3);
+	// info createmap ;
+	createmap.put("Accrual_W_E_Date",date3);
+	createRecord = zoho.creator.createRecord("staffdocs","expense-management","Timesheets",createmap,Map(),"zcreator");
+	info createRecord;
+}
+return createRecord.get("message");
