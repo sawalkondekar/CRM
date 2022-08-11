@@ -1,0 +1,7 @@
+branch_rec = zoho.crm.getRecordById("Branch","31355000000240083");
+getuin = branch_rec.get("UIN_Number");
+getuin_1 = getuin.toNumber() + 1;
+info "getuin_1" + getuin_1;
+map1 = Map();
+map1.put("UIN_Number",getuin_1.toString());
+update = zoho.crm.updateRecord("Branch","31355000000240083",map1); info update;
