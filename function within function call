@@ -1,0 +1,20 @@
+//test_1_v_align is a standalone function created
+//code of this - 
+name = "Sid";
+mp = Map();
+mp.put("Last_Name",name);
+create = zoho.crm.createRecord("Contacts",mp);
+return "Success";
+// then in function before open , click on rest api and copy the same and paste in url and save it
+
+a = "HI";
+info a;
+contname = "Contacts";
+resp = invokeurl
+[
+	url :"https://www.zohoapis.in/crm/v2/functions/test_1_v_align/actions/execute?auth_type=oauth"
+	type :GET
+	parameters:{"name":contname}
+	connection:"zohocrm"
+];
+info resp;
