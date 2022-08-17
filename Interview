@@ -1,3 +1,6 @@
+-  we can chat to support team without login also
+
+
 PROCESS MANAGEMENT SECTION IN SETTING
 
 Layout Rules - we can hide or show fields 
@@ -17,3 +20,5 @@ Command Center - similar to blueprint i think, same state, and condtions we can 
     go to setting - then export or import option
     
 - client script = used javascript , on load of form, on event, on save we can add javascript code 
+
+
