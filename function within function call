@@ -18,3 +18,13 @@ resp = invokeurl
 	connection:"zohocrm"
 ];
 info resp;
+////////////////////////////////////////
+//	resp = invokeurl
+	[
+		url :"https://www.zohoapis.in/crm/v2/functions/display_error_update_contact_if/actions/execute?auth_type=oauth"
+		type :GET
+		parameters:{"resp1":resp1,"CusUIN":CusUIN,"cid":CusID}
+		connection:"zohocrm"
+//	];
+//	info "Resp ********************* =" + resp;
+//	pass parameter
