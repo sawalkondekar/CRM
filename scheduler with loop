@@ -1,0 +1,41 @@
+// id = 4995618000002864055;
+// acc_rec = zoho.crm.getRecordById("Accounts",id);
+// //info acc_rec;
+// last_interaction = acc_rec.get("Last_Interaction_Time");
+// info last_interaction;
+// current_date = zoho.currenttime;
+// info current_date;
+// days_between = daysBetween(last_interaction,current_date).remove("-");
+// info days_between;
+// map = Map();
+// map.put("Days_since_Last_Interaction",days_between);
+// update_rec = zoho.crm.updateRecord("Accounts",id,map);
+// info update_rec;
+lop = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+for each  page in lop
+{
+	resp = zoho.crm.getRecords("Accounts",page,200);
+	if(resp.size() == 0)
+	{
+		break;
+	}
+	else
+	{
+		for each  acc_rec in resp
+		{
+			last_interaction = acc_rec.get("Last_Interaction_Time");
+			if(last_interaction != null)
+			{
+				info last_interaction;
+				current_date = zoho.currenttime;
+				info current_date;
+				days_between = daysBetween(last_interaction,current_date).remove("-");
+				info days_between;
+				map = Map();
+				map.put("Days_since_Last_Interaction",days_between);
+				update_rec = zoho.crm.updateRecord("Accounts",acc_rec.get("id"),map);
+				info update_rec;
+			}
+		}
+	}
+}
