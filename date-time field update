@@ -7,3 +7,6 @@ mp.put("Date_Time_1", expiry);
 update = zoho.crm.updateRecord("Leads", leadID, mp);
 info update;
 //Replace 5:30 with your time
+/////////////////////
+// use below for updating created_date-time into other date-time field
+updated_date_time = calls_record.get("Created_Time").toTime("yyyy-MM-dd'T'HH:mm:ss").addMinutes(00).toString("yyyy-MM-dd'T'HH:mm:ss+10:00");
