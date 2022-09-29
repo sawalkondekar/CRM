@@ -1,0 +1,4 @@
+mp = Map();
+mp.put("Converted_To_Lead",true);
+mp.put("Lead",id_cust);
+update = zoho.crm.updateRecord("Prospects",id,mp );
