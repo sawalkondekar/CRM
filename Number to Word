@@ -1,4 +1,4 @@
-
+// sample code, still some error for paisa..not error mismtaching values..
 vals = 60.44;
 val_s = vals.toLong();
 info val_s;
