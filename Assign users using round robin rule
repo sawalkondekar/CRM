@@ -1,0 +1,48 @@
+https://www.zoho.com/crm/resources/tips/functions-round-robin.html
+
+Round-Robin assignment of records
+Right now, the solution allows you to auto-assign leads from web form and imported lists. Let us look at a need where you want to auto-assign leads from in-bound calls in a round-robin method, across modules.
+
+Prerequisite: You must create a permanent record in the specific module, leads in this case and assign that record to the first user in round-robin.
+
+Here’s how you add this function to your CRM account:
+
+Go to Setup > Automations > Actions > Functions > Configure Function > Write your own.
+Enter the name of the function. For example: “Round-robin assignment”.
+Select the module as Leads. Add a description(optional).
+Copy the code given below.
+Click “Edit arguments”.
+Enter the name as “leadId” and select the value as “Lead Id”.
+Click Save & Execute Script.
+Save the changes.
+As you have created a permanent record, this function does the assignment on a round-robin basis without errors. Note that the function won’t work if you don’t create a permanent record .
+
+The Code:
+
+
+firstRefRecordDetails = zoho.crm.getRecordById("Leads", xxxxxxxxxxxxx);
+firstOwner = ifnull(firstRefRecordDetails.get("Owner"),"").get("id");
+if (firstOwner = "User_ID_1")
+{
+UpOwner = "User_ID_2";
+}
+if (firstOwner = "User_ID_2")
+{
+UpOwner = "User_ID_1";
+}
+updatefirstRef = zoho.crm.update("Leads", "xxxxxxxxxxx".toLong(), { "Owner" : UpOwner.toLong() });
+info updatefirstRef;
+mp = map();
+mp.put("Owner", UpOwner.toLong());
+updateResp = zoho.crm.update("Leads", leadId.toLong(), mp);
+info mp;
+info updateResp;
+Note:
+
+Replace 'xxxxxxxxxx' with the permanent record id mentioned in the pre-requisite.
+The above code is an example for assigning the records in the Leads module. You can use this code for any other module by changing the module name and parameters.
+Assigning to a user requires the User ID and not the user name. The user ID is found in the Setup page of your CRM. Take a look at the screenshot below for more details.
+The code is zoho.crm._getRecordById for Version 1.0 of APIs.
+
+
+Check this out and let us know how it worked. If you have questions, ask away. Share this with your team if you think they'll find this useful.
