@@ -1,0 +1,8 @@
+//workflow / fun
+rec = zoho.crm.getRecordById("Contacts", cont_id);
+last_name = rec.get("Last_Name"); info last_name;
+mp = Map();
+mp.put("Last_Name", last_name);
+ otherParams=Map();
+create = zoho.creator.createRecord("ennovationstechservprivateli", "test12", "Contacts", mp,otherParams, "creator");
+//owner name, app name, form name, 
