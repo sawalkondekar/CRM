@@ -1,0 +1,13 @@
+dataMap = {"RecordID":"3675544000160837004","StudentName":"Test Sid2","EnquirerName":"Test Sid2","EnquirerMobile":"9833276350","EnquirerEmail":"rs38h7@gmail.com","Program":"Nursery-3 to 4 years","AcademicYear":"Jun 22 - May 23","FASCustomerID":"40959","EnquiryDate":"2022-11-16 00:00:00.000","Lead_Source":"Digital Organic","Sub_Source":"Newspaper","City":"Mumbai"};
+//hMap = {"Authorization":"Zoho-oauthtoken :nfhs@5439487#dhhd?teyd45hh4ydvfj8362%"};
+hMap = {"SecretKey":"nfhs@5439487#dhhd?teyd45hh4ydvfj8362%","Content-Type":"application/json"};
+var = invokeurl
+[
+	url :"http://43.204.52.8:9053/api/Enquiry/CreateNewEnquiry"
+	type :POST
+	parameters:dataMap
+	headers:hMap
+];
+info var;
+deal = zoho.crm.getRecordById("Deals","3250887000282931778");
+info deal;
