@@ -1,0 +1,45 @@
+loop = {1,2,3,4,5};
+for each ele in loop
+{
+customers = zoho.crm.getRecords("Customers");
+for each rec in customers
+{
+today = zoho.currentdate;
+info today;
+today_created = rec.get("Created_Time").toDate();
+info today_created;
+customer_name = rec.get("Name");
+customer_owner = rec.get("Owner");
+created_time = rec.get("Created_Time").toDate();
+Onboarding_Specialist = rec.get("Onboarding_Specialist");
+Initial_Meeting_Date = rec.get("Initial_Meeting_Date");
+account_status = rec.get("Status");
+committed_no_of_lives = rec.get("No_of_Lives");
+minimum_billable_lives = rec.get("Contracted_Lives");
+previouly_used_solution = rec.get("Previouly_used_Solution");
+onboarding_score = rec.get("Onboarding_Score");
+onboarding_score_reasons = rec.get("Onboarding_Score_Reasons");
+onboarding_notes = rec.get("Onboarding_Notes");
+searchCustomerName = zoho.crm.searchRecords("Customers","(Name:equals:" + customer_name + ")");
+getid = searchCustomerName.getjson("id");
+mp = Map();
+mp.put("Customer_Name",getid);
+mp.put("Owner",customer_owner);
+mp.put("Billing_Date",created_time);
+mp.put("Onboarding_Specialist",Onboarding_Specialist);
+mp.put("Initial_Meeting_Date",Initial_Meeting_Date);
+mp.put("Account_Status",account_status);
+mp.put("Commited_Number_of_Lives",committed_no_of_lives);
+mp.put("Minimum_Billable_Lives",minimum_billable_lives.toLong());
+mp.put("Previous_Solution",previouly_used_solution);
+mp.put("Onboarding_Score",onboarding_score);
+mp.put("Onboarding_Score_Reasons",onboarding_score_reasons);
+mp.put("Onboarding_Notes",onboarding_notes);
+mp.put("Name",customer_name);
+create_cust_billing = zoho.crm.createRecord("Customer_Billings",mp);
+info create_cust_billing;
+
+}
+}
+//
+return "";
