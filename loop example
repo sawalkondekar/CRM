@@ -2,6 +2,7 @@ loop = {1,2,3,4,5};
 for each ele in loop
 {
 customers = zoho.crm.getRecords("Customers");
+//// customers = zoho.crm.getRecords("Customers",1,200);
 for each rec in customers
 {
 today = zoho.currentdate;
