@@ -1,0 +1,62 @@
+maxLoop = ",".repeat(50);
+loop = maxLoop.toList();
+info "Loop Size : " + loop.size();
+checkRecordCount = 0;
+totalRecords = 0;
+idcount = 0;
+errorcount = 0;
+for each index ele in loop
+{
+	ele = ele + 1;
+	// 	contacts = zoho.crm.getRecords("Contacts",ele,200);
+	//--0
+	customers = zoho.crm.getRecords("Customers",ele,200);
+	// 	info customers ;
+	info "Page Number : " + ele;
+	checkRecordCount = customers.size();
+	info "checkRecordCount : " + checkRecordCount;
+	totalRecords = totalRecords + checkRecordCount;
+	//--0
+	for each  rec in customers
+	{
+		//--0
+		mp = Map();
+		mp.put("Billing_Date",zoho.currentdate);
+		mp.put("Customer_Name",rec.get("id"));
+		// 		mp.put("Customer_Owner",rec.get("Owner"));
+		mp.put("Customer_Owner_Name",if(rec.get("Owner") == null,rec.get("Owner"),rec.get("Owner").get("name")));
+		// 		mp.put("Onboarding_Specialist",rec.get("Onboarding_Specialist"));
+		mp.put("Onboarding_Specialist_Name",if(rec.get("Onboarding_Specialist") == null,rec.get("Onboarding_Specialist"),rec.get("Onboarding_Specialist").get("name")));
+		mp.put("Initial_Meeting_Date",rec.get("Initial_Meeting_Date"));
+		mp.put("Account_Status",rec.get("Status"));
+		mp.put("Commited_Number_of_Lives",rec.get("No_of_Lives"));
+		mp.put("Minimum_Billable_Lives",if(rec.get("Contracted_Lives") == null,0,rec.get("Contracted_Lives").toLong()));
+		mp.put("Previous_Solution",rec.get("Previouly_used_Solution"));
+		mp.put("Onboarding_Score",rec.get("Onboarding_Score"));
+		mp.put("Onboarding_Score_Reasons",rec.get("Onboarding_Score_Reasons"));
+		mp.put("Onboarding_Notes",rec.get("Onboarding_Notes"));
+		mp.put("Name",rec.get("Customer_ID"));
+		//--0
+		create_cust_billing = zoho.crm.createRecord("Customer_Billings",mp);
+		if(create_cust_billing.get("id") != null)
+		{
+			idcount = idcount + 1;
+		}
+		else
+		{
+			errorcount = errorcount + 1;
+			info "CustomerID# " + rec.get("id");
+			info create_cust_billing;
+		}
+		//--0
+	}
+	if(checkRecordCount < 200)
+	{
+		break;
+	}
+}
+info "idcount : " + idcount;
+info "errorcount : " + errorcount;
+info "totalRecords : " + totalRecords;
+returnData = idcount + " Records Created and " + errorcount + " Records Failed to Create. " + totalRecords + " Total Records Found.";
+return returnData;
