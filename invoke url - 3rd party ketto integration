@@ -1,0 +1,35 @@
+GenerateTokenURL = "https://apis.ketto.org/oauth/token";
+headers = Map();
+headers.put("Content-Type","application/json");
+headers.put("accept","text/plain");
+sd = Map();
+sd.put("grant_type","client_credentials");
+sd.put("client_id","4");
+sd.put("client_secret","ZRiIiZbM8mrhJUVZctNyvCNeFsELkI2xWDGjbkOw");
+sd.put("scope","*");
+FetchToken = invokeurl
+[
+	url :GenerateTokenURL
+	type :POST
+	parameters:sd.toString()
+	headers:headers
+];
+token = FetchToken.get("access_token");
+headers1 = Map();
+headers1.put("Authorization","Bearer " + token);
+headers1.put("Content-Type","application/json");
+headers1.put("accept","text/plain");
+cDate15 = zoho.currentdate.subDay(15).toString("YYYY-MM-dd");
+//info cDate15;
+cDate = zoho.currentdate.toString("YYYY-MM-dd");
+//info cDate;
+i = 1;
+fundURL = "https://apis.ketto.org/api/zoho/fundraisers/raised?startdate=" + cDate15 + "&enddate=" + cDate + "&orderBy=last_updated_date&sortedBy=desc&page=" + i;
+//info fundURL;
+FetchRecord = invokeurl
+[
+	url :fundURL
+	type :GET
+	headers:headers1
+];
+//info FetchRecord;
