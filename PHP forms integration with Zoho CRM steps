@@ -1,0 +1,25 @@
+1. Installing Zoho CRM SDK
+   1.composer require zohocrm/zohocrm-php-sdk
+
+
+
+1.Create a ZohoCRM client instance
+   1.use Zoho\CRM\ApiClient; $client = new ApiClient([ 'access_token' => '<your-access-token>', 'sandbox' => false // set this to true if you are using a ZohoCRM sandbox account ]);
+   2.Get a record
+     try { $leads = $client->module('Leads')->getRecords(); // Connection is established } catch (\Exception $e) { // Connection failed }
+   3.Post a record // Define the lead details $leadDetails = [ 'First_Name' => 'John', 'Last_Name' => 'Doe', 'Email' => 'johndoe@example.com', 'Phone' => '+1-123-456-7890', // add more lead details as required ]; // Add the lead to ZohoCRM $leadsModule = $client->module('Leads'); $newLead = $leadsModule->createRecord($leadDetails);
+
+How to generate an access token
+
+1. Go to the Zoho Developer Console and sign in with your Zoho account credentials.
+2. Create a new client by clicking on the "Add Client" button and selecting "Server-based Application" as the client type.
+3. Fill in the details for your client, including the name, website, and redirect URI.
+4. Click on the "Create" button to create your client.
+5. After your client is created, you will be redirected to the client details page. Here, you can find your client ID and client secret.
+6. Click on the "Generate" button next to "Auth Tokens" to generate your access token and refresh token.
+7. You will be prompted to authorize your client to access your ZohoCRM account. Click on the "Accept" button to authorize your client.
+8. Your access token and refresh token will be displayed on the screen. Copy these tokens and store them securely, as they will be required to make API requests to ZohoCRM.
+
+Note: The access token is valid for 1 hour, after which it will expire.
+You can use the refresh token to generate a new access token when the current access token expires.
+This should be done in the PHP controller please check zoho docs for generating token using refresh token.
