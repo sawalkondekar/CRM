@@ -1,0 +1,12 @@
+access, refresh token - https://www.zoho.com/crm/developer/docs/api/v4/oauth-overview.html
+
+Scope should be used for both creation and updation is :
+scope=ZohoCRM.modules.ALL
+
+insert record doc - https://www.zoho.com/crm/developer/docs/api/v2/insert-records.html
+
+
+Postman steps:
+1.https://accounts.zoho.in/oauth/v2/token?grant_type=authorization_code&client_id=1000.6AR9PNBU12Q2C1U2NQ5KLTPDRI4ELS&client_secret=5d48de07021a144a5da4a4345d95a5dd50b5b5a388&redirect_uri=https://www.google.com&code=1000.892e06ac848947c9d538d12fdd469944.aeafa1ee108e6e468f5a4a68408da158
+2.https://accounts.zoho.in/oauth/v2/token?refresh_token=1000.7844d4608feff14b240cbcca59eba142.b39dec8060e883619147e8b2b0771134&client_id=1000.6AR9PNBU12Q2C1U2NQ5KLTPDRI4ELS&client_secret=5d48de07021a144a5da4a4345d95a5dd50b5b5a388&grant_type=refresh_token
+
