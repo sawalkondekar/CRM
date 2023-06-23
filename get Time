@@ -1,0 +1,34 @@
+leads = zoho.crm.getRecordById("Leads",lead_id);
+start = leads.get("Start_Date"); info "start" + start;
+end = leads.get("End_Date"); info "end  " + end;
+
+time = start.getSuffix("T"); info time;
+time1 = time.Substring(0,2); info time1;
+
+time2 =  end.getSuffix("T"); info time2;
+time3 = time2.Substring(0,2); info time3;
+
+// expiry = start.toString("yyyy-MM-dd'T'HH:mm:ss'+05:30'"); info "expiry" + expiry;
+// time = expiry.getTime(24); info time;
+// expiry2 = end.toString("yyyy-MM-dd'T'HH:mm:ss'+05:30'").getTime(24); info expiry2;
+
+// hours = time.subString(0,1); info hours;
+// hours2 = expiry2.subString(0,1); info hours2;
+
+up = time1.toLong() + time3.toLong(); info "up"+ up;
+
+if ( up <= "50".toLong() ) 
+{
+	info "Hi" ;
+	mp = Map();
+	mp.put("Charges_Total", up.toLOng());
+	update = zoho.crm.updateRecord("Leads", lead_id, mp);
+	info update ;
+}
+
+else 
+{
+	mp = Map();
+	mp.put("Charges_Total", up.toLOng());
+	update = zoho.crm.updateRecord("Leads", lead_id, mp);
+}
