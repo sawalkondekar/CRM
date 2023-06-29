@@ -1,0 +1,27 @@
+// dataMap = {"RecordID":"3747406000002271010","StudentName":"Test Sid6","EnquirerName":"Deal for - Kris Marrier (Sample)","EnquirerMobile":"555-555-5555","EnquirerEmail":"krismarrier@gmail.comm","Program":"Nursery-3 to 4 years","AcademicYear":"Jun 22 - May 23","FASCustomerID":"40957","EnquiryDate":"2022-11-16 00:00:00.000","Lead_Source":"Digital Organic","Sub_Source":"Other"};
+//"EnquiryDate":"2022-11-16 00:00:00.000",,"City":"Mumbai"
+deals = zoho.crm.getRecordById("Deals",RecordID);
+//info deals;
+StudentName = deals.get("Student_Name");
+EnquirerName = deals.get("Deal_Name");
+Program = deals.get("Grade");
+AcademicYear = deals.get("Academic_Year");
+FAS_ID = deals.get("FAS_ID");
+Lead_Source = deals.get("Lead_Source");
+Sub_Source = deals.get("Sub_Source");
+City = deals.get("City");
+EnquiryDate = deals.get("Created_Time");
+// fas_id = zoho.crm.getRecordById("Franchise_Profile", <NUMBER>)
+dataMap = {"RecordID":RecordID,"StudentName":StudentName,"EnquirerName":EnquirerName,"EnquirerMobile":EnquirerMobile,"EnquirerEmail":EnquirerEmail,"Program":Program,"AcademicYear":AcademicYear,"FASCustomerID":FAS_ID,"Lead_Source":Lead_Source,"Sub_Source":Sub_Source,"EnquiryDate":EnquiryDate,"City":City};
+//hMap = {"Authorization":"Zoho-oauthtoken :nfhs@5439487#dhhd?teyd45hh4ydvfj8362%"};
+//"RecordID":RecordID,"StudentName":StudentName,"EnquirerName":EnquirerName,"EnquirerMobile":EnquirerMobile,"EnquirerEmail":EnquirerEmail,"Program":Program,"AcademicYear":AcademicYear,"FASCustomerID":FAS_ID,"EnquiryDate":EnquiryDate,"Lead_Source":Lead_Source,"Sub_Source":Sub_Source,"City":City};
+info dataMap;
+hMap = {"SecretKey":" nfhs@5439487#dhhd?teyd45hh4ydvfj8362%","Content-Type":"application/json"};
+var = invokeurl
+[
+	url :"http://65.2.94.152:9016/api/Enquiry/CreateNewEnquiry"
+	type :POST
+	parameters:dataMap
+	headers:hMap
+];
+info var;
