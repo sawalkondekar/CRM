@@ -1,0 +1,4 @@
+deleteRecordMap = Map();
+deleteRecordMap = {"module":"Leads","id":leadid};
+deleteResp = zoho.crm.invokeConnector("crm.delete",deleteRecordMap);
+info deleteResp;
