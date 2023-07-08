@@ -1,0 +1,100 @@
+lead_record = zoho.crm.getRecordById("Leads",lead_id);
+first_name = lead_record.get("First_Name");
+middle_name = lead_record.get("Middle_Name");
+last_name = lead_record.get("Last_Name");
+department = lead_record.get("Department");
+lead_type = lead_record.get("Lead_Type");
+title = lead_record.get("Designation");
+mobile = lead_record.get("Mobile");
+phone = lead_record.get("Phone");
+lead_source = lead_record.get("Lead_Source");
+interested_in = lead_record.get("Interested_In");
+intersted_sub_cat = lead_record.get("Interested_In_Sub_Category");
+reference_id = lead_record.get("Reference_ID");
+company = lead_record.get("Company");
+email = lead_record.get("Email");
+website = lead_record.get("Website");
+lead_status = lead_record.get("Lead_Status");
+rating = lead_record.get("Rating");
+no_employees = lead_record.get("No_of_Employees");
+currency = lead_record.get("Currency");
+industry = lead_record.get("Industry");
+sub_industries = lead_record.get("Sub_Industries");
+other = lead_record.get("Other");
+email_opt_out = lead_record.get("Email_Opt_Out");
+exchange_rate = lead_record.get("Exchange_Rate");
+annual_revenue = lead_record.get("Annual_Revenue");
+//Address Information
+street = lead_record.get("Street");
+city = lead_record.get("City");
+state = lead_record.get("State");
+zip = lead_record.get("Zip_Code");
+country = lead_record.get("Country");
+//Description Information
+description = lead_record.get("Description");
+ownrer = lead_record.get("Owner");
+////////////////Mapping
+mp = Map();
+mp.put("First_Name",first_name);
+mp.put("Middle_Name",middle_name);
+mp.put("Last_Name",last_name);
+mp.put("Mobile",mobile);
+mp.put("Phone",phone);
+mp.put("Email",email);
+mp.put("Lead_Source",lead_source);
+//mp.put("Account_Name", lead_id);
+mp.put("Title",title);
+mp.put("Department",department);
+//Address Information
+mp.put("Mailing_Street",street);
+mp.put("Mailing_City",city);
+mp.put("Mailing_State",state);
+mp.put("Mailing_Zip",zip);
+mp.put("Mailing_Country",country);
+//Description
+mp.put("Description",description);
+create_contact = zoho.crm.createRecord("Contacts",mp);
+info create_contact;
+contact_name = create_contact.get("id");
+//////////////////////////////Accounts ************************************
+mp1 = Map();
+mp1.put("Account_Name",company);
+mp1.put("Annual_Revenue",annual_revenue);
+mp1.put("Exchange_Rate",exchange_rate);
+mp1.put("Phone",phone);
+mp1.put("Website",website);
+mp1.put("Employees",no_employees);
+mp1.put("Currency",currency);
+mp1.put("Lead_Source",lead_source);
+mp1.put("Industry",industry);
+mp1.put("Sub_Industries",sub_industries);
+mp1.put("Billing_Street",street);
+mp1.put("Billing_State",state);
+mp1.put("Billing_City",city);
+mp1.put("Billing_Code",zip);
+mp1.put("Billing_Country",country);
+mp1.put("Description",description);
+// Create in Accounts
+create_account = zoho.crm.createRecord("Accounts",mp1);
+info create_account;
+account_name = create_account.get("id");
+////Deals - Tendeer Creation *********************************8
+mp2 = Map();
+mp2.put("Name",last_name);
+mp2.put("Email",email);
+mp2.put("Contact_Name",contact_name);
+mp2.put("Reference_ID",reference_id);
+mp2.put("Amount",annual_revenue);
+mp2.put("Account_Name",account_name);
+mp2.put("Lead_Source",lead_source);
+mp2.put("Description",description);
+//create in Deals-Tender
+create_deals_tender = zoho.crm.createRecord("Deals_Tender",mp2);
+info create_deals_tender;
+tender_id = create_deals_tender.get("id");
+openUrl("https://crmplus.zoho.in/indronessolutionspvtltd/index.do/cxapp/crm/org60018094476/tab/CustomModule3/" + input.tender_id,"same window");
+// deleteRecordMap = Map();
+// deleteRecordMap = {"module":"Leads","id":lead_id};
+// deleteResp = zoho.crm.invokeConnector("crm.delete",deleteRecordMap);
+// info deleteResp;
+return "Lead is Converted into Lead Tender Module";
