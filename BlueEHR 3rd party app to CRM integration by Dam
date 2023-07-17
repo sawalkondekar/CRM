@@ -1,0 +1,33 @@
+//AUTHENTICATION PARAMS
+ll = {"code":"1000.b527b07ddf26e15e68d16742d669530f.acc748ded8e7209b2990470f3e0214d8","client_id":"1000.BY6KAQBQCOJUNS0CRHK05704H3IHDE","client_secret":"aada47e92fa561949e5de732fe916a8c5c74e221df","redirect_uri":"https://yourdomain.com/redirect","grant_type":"authorization_code"};
+oauthParams.put("client_id","1000.BY6KAQBQCOJUNS0CRHK05704H3IHDE");
+oauthParams.put("client_secret","aada47e92fa561949e5de732fe916a8c5c74e221df");
+//oauthParams.put("redirect_uri","https://yourdomain.com/redirect");
+oauthParams.put("refresh_token","1000.97de266fdff34b17f3d6e82ae64db5dd.86225f3c2df60e9a9b9c1d5a4843d0ae");
+//oauthParams.put("grant_type","authorization_code");
+oauthParams.put("grant_type","refresh_token");
+tokenInfo = invokeurl
+[
+	url :"https://accounts.zoho.com/oauth/v2/token"
+	type :POST
+	parameters:ll
+];
+//info tokenInfo;
+rt = invokeurl
+[
+	url :"https://accounts.zoho.com/oauth/v2/token"
+	type :POST
+	parameters:oauthParams
+];
+//info rt;
+access_token = rt.get("access_token");
+//info access_token;
+if(rt.containKey("access_token"))
+{
+	accessToken = rt.get("access_token");
+	headers.put("Authorization","Zoho-oauthtoken ".concat(accessToken));
+}
+else
+{
+	info tokenInfo;
+	return;
