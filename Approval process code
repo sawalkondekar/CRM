@@ -1,0 +1,10 @@
+deal_rec = zoho.crm.getRecordById("Deals",deal_id,{"approved":"both"});
+info deal_rec;
+owner = deal_rec.get("Owner");
+//info owner;
+created_owner = deal_rec.get("Created_By").get("id");
+info created_owner;
+mp = Map();
+mp.put("Owner",created_owner);
+update_deal_rec = zoho.crm.updateRecord("Deals",deal_id,mp);
+info update_deal_rec;
