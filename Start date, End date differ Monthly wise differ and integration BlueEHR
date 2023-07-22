@@ -1,0 +1,34 @@
+start_date = "2021-01-01".toDate();
+end_date = "2023-03-11".toDate();
+diff = monthsBetween(start_date,end_date);
+info "diff : " + diff;
+iterations = diff + 1;
+iterationString = "".leftPad(iterations).replaceAll(" ",",").toList().subList(0,iterations);
+for each  ele in iterationString
+{
+	startDate = start_date;
+	info "start Date : " + startDate;
+	endDate = start_date.eomonth(0);
+	if(endDate > end_date)
+	{
+		endDate = end_date;
+	}
+	info "End Date : " + endDate;
+	header_map = Map();
+	header_map.put("Authorization","Bearer 743619ac88677a561ef611b983a38b4c39e590e4");
+	startDate = startDate.toString("yyyy-MM-dd");
+	endDate = endDate.toString("yyyy-MM-dd");
+	response = invokeurl
+	[
+		url :" https://uat-api.blueehr.com/blueehr/public/data-pull-api/appointments?facility=wellqordemo&dataModifiedStartDate=" + startDate + "&dataModifiedEndDate=" + endDate
+		type :GET
+		headers:header_map
+	];
+//	info response;
+	data = response.get("response").get("data");
+//	info data;
+	records = data.get("records");
+	size = records.size();
+	info "Size of appointment IDs: " + size;
+	start_date = startDate.toDate().addMonth(1).toStartOfMonth();
+}
