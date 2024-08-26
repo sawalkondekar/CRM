@@ -1,0 +1,32 @@
+
+/*
+This is a sample function. Uncomment to execute or make changes to this function.  
+vendorCreditID = vendor_credit.get("vendor_credit_id");
+organizationID = organization.get("organization_id");
+*/
+
+pages = {1,2,3,4,5,6,7,8,9,10};
+for each page in pages
+{
+	url = "https://www.zohoapis.in/books/v3/invoices?has_attachment=false&page="+page+"&per_page=200&organization_id=60022277655";
+	response = invokeurl
+	[
+		url : url
+		type :GET
+		connection:"catalystservicesolutions"
+	];
+	if ( response.size() == 0 ) 
+	{
+		 break;
+	}
+	else 
+	{
+			allinvoices = response.get("invoices"); 
+			count = 0;
+		for each invoice in allinvoices
+		{
+				count = count + 1;
+		}
+		info count ;
+	}
+}
