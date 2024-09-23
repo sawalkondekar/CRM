@@ -1,0 +1,39 @@
+// For Hide Convert Button
+there are 2 options
+Option 1: Hide using Profiles and Permissions
+1.Navigate to Setup:
+2.Go to Users and Controls:
+3.Edit Profile:
+Choose the profile of the users for whom you want to hide the button (e.g., Sales Profile).
+4.Disable the Convert Lead Permission:
+Look for the permission Convert Lead under the Leads module and uncheck it.
+5.Save the changes.
+
+This will hide the Convert button for users with this profile.
+-------------------------------------
+
+To disable or hide the Convert button in Zoho CRM under the Leads detailed view, follow these steps:
+Option 1: Hide using Profiles and Permissions
+1.Navigate to Setup:
+Click the Settings icon (gear icon) in the top-right corner.
+Go to Users and Controls:
+Select Users and Control, then go to Profiles.
+2.Edit Profile:
+
+Choose the profile of the users for whom you want to hide the button (e.g., Sales Profile).
+3.Disable the Convert Lead Permission:
+
+Look for the permission Convert Lead under the Leads module and uncheck it.
+4.Save the changes.
+
+This will hide the Convert button for users with this profile.
+Option 2: Hide using Page Layout Customization
+Navigate to the Layout Editor:
+
+Go to Setup > Customization > Modules > Leads > Layouts.
+Select the Layout:
+
+Choose the layout you want to customize.
+Modify the Layout:
+
+You can modify the buttons under the detailed view, but directly removing the Convert button via the layout isn't usually possible. The button is tied to lead permissions and roles.
