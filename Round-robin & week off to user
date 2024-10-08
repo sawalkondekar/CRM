@@ -1,0 +1,4 @@
+- in assignment rule add user using round-robin rule
+- and if week off is there - then in Company details - add shift time of users.
+and add a workflow to trigger this on creation use assignment rule 
+:)
