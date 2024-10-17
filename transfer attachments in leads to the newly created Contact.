@@ -1,0 +1,19 @@
+get_realted_list = zoho.crm.getRelatedRecords("Attachments","Leads",Lead_id);
+// info get_realted_list;
+if ( get_realted_list.size() > 0 )
+{
+for each sdf in get_realted_list
+{
+file_id = sdf.get("id");
+info file_id ;
+downloadFile = invokeurl
+[
+url :"https://www.zohoapis.in/"+"crm/v2/Leads/" + Lead_id + "/Attachments/" + file_id
+type :GET
+connection : "crm"
+];
+info downloadFile;
+file=zoho.crm.attachFile("Contacts",contact_id,downloadFile);
+info file;
+}
+}
